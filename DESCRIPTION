@@ -12,7 +12,7 @@ Description: Functions to retrieve data that you have access to on the Sensing
     perform further analysis on your data. The different data types which are 
     available through the Sensing Clues platform are observations, tracks, map 
     layers and ontologies.
-License: What license is it under?
+License: AGPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
