@@ -1,3 +1,11 @@
+#' Log in to Sensing Clues Cluey
+#'
+#' @param username Your Cluey username.
+#' @param password Your Cluey password.
+#' @param url A Sensing Clues URL, default is https://focus.sensingclues.org/.
+#'
+#' @return A cookie object
+#' @export
 login_cluey <- function(username = "", password = "", url = "https://focus.sensingclues.org/") {
   # login
   url_login <- paste0(url, "api/auth/login")
