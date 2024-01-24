@@ -1,11 +1,19 @@
 Package: wildcatr
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Retrieve Data From Sensing Clues Platform
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Authors@R: c(
+    person("Melanie", "Arp", , "melanie.arp@sensingclues.org", role = c("aut", "cre")),
+    person("Hugo", "Koopmans", role = "aut")
+  )
+Description: Functions to retrieve data that you have access to on the Sensing 
+    Clues platform. This is the most important building block of the Wildlife 
+    Conservation Analytical Toolbox (WildCAT), it allows you to inspect and 
+    perform further analysis on your data. The different data types which are 
+    available through the Sensing Clues platform are observations, tracks, map 
+    layers and ontologies.
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
