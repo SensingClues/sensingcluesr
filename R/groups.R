@@ -1,3 +1,18 @@
+#' Overview of access to data sources
+#'
+#' @param cookie A cookie obtained by login_cluey().
+#' @param from Start date.
+#' @param to End date.
+#' @param url A Sensing Clues URL, default is https://focus.sensingclues.org/.
+#'
+#' @return A data frame representing the data sources you have access to.
+#' There are three columns including a data source identifier, a name and the
+#' number of observations made in that group.
+#' @export
+#'
+#' @examples
+#' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
+#' df <- get_groups(cookie)
 get_groups <- function(cookie,
                        from = "1900-01-01",
                        to = "2999-12-31",
