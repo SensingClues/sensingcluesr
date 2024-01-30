@@ -6,6 +6,9 @@
 #'
 #' @return A cookie object
 #' @export
+#'
+#' @examples
+#' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 login_cluey <- function(username = "", password = "", url = "https://focus.sensingclues.org/") {
   # login
   url_login <- paste0(url, "api/auth/login")

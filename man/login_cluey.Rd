@@ -23,3 +23,6 @@ A cookie object
 \description{
 Log in to Sensing Clues Cluey
 }
+\examples{
+cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
+}
