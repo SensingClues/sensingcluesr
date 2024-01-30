@@ -1,3 +1,23 @@
+#' Retrieve observation data
+#'
+#' @param cookie A cookie obtained by login_cluey().
+#' @param group One or multiple group identification character string(s), see which groups you have access to with get_groups().
+#' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format
+#' @param from Start date.
+#' @param to End date.
+#' @param aoi
+#' @param filteredConcepts One or multiple concept definitions, for example https://sensingclues.poolparty.biz/SCCSSOntology/186. See https://sensingclues.poolparty.biz/GraphViews/ all available concepts.
+#' @param updateProgress A function to update a progress bar object, default is NULL.
+#' @param allAttributes TRUE or FALSE, allows you to collect more attributes for the observations.
+#' @param url A Sensing Clues URL, default is https://focus.sensingclues.org/.
+#' @param lang Language in which the concepts are shown, default is english.
+#'
+#' @return A data frame with all observations collected by the defined group(s), within the given date range.
+#' @export
+#'
+#' @examples
+#' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
+#' df <- get_observations(cookie, group = 'focus-project-1234') # demo group
 get_observations <- function(cookie,
                              group,
                              bounds = list(north = 90, east = 180, south = -89, west = -179),
