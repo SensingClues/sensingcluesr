@@ -5,12 +5,12 @@
 #' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format
 #' @param from Start date.
 #' @param to End date.
-#' @param aoi
-#' @param filteredConcepts One or multiple concept definitions, for example https://sensingclues.poolparty.biz/SCCSSOntology/186. See https://sensingclues.poolparty.biz/GraphViews/ all available concepts.
+#' @param aoi Area of interest.
+#' @param filteredConcepts One or multiple concept definitions, for example https://sensingclues.poolparty.biz/SCCSSOntology/186. See https://sensingclues.poolparty.biz/GraphViews/ for all available concepts.
 #' @param updateProgress A function to update a progress bar object, default is NULL.
 #' @param allAttributes TRUE or FALSE, allows you to collect more attributes for the observations.
 #' @param url A Sensing Clues URL, default is https://focus.sensingclues.org/.
-#' @param lang Language in which the concepts are shown, default is english.
+#' @param lang Language in which the concepts are shown, default is English.
 #'
 #' @return A data frame with all observations collected by the defined group(s), within the given date range.
 #' @export
@@ -78,7 +78,7 @@ get_observations <- function(cookie,
   # initial call to get total and number of pages to get
   httr::handle_reset(url_search_results)
   result <- httr::POST(url_search_results, body = query, encode = "raw",
-                 httr::content_type_json(), httr::set_cookies(focus2 = utils::URLdecode(cookie$value))) # verbose())
+                       httr::content_type_json(), httr::set_cookies(focus2 = utils::URLdecode(cookie$value))) # verbose())
   searchResult <- content(result)
 
   # setup empty dataframe
@@ -123,7 +123,7 @@ get_observations <- function(cookie,
     # call to get next page
     httr::handle_reset(url_search_results)
     result <- httr::POST(url_search_results, body = query, encode = "raw",
-                   httr::content_type_json(), httr::set_cookies(focus2 = utils::URLdecode(cookie$value)))
+                         httr::content_type_json(), httr::set_cookies(focus2 = utils::URLdecode(cookie$value)))
     searchResult <- content(result)
 
     # number of results in first page

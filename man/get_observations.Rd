@@ -29,7 +29,9 @@ get_observations(
 
 \item{to}{End date.}
 
-\item{filteredConcepts}{One or multiple concept definitions, for example https://sensingclues.poolparty.biz/SCCSSOntology/186. See https://sensingclues.poolparty.biz/GraphViews/ all available concepts.}
+\item{aoi}{Area of interest.}
+
+\item{filteredConcepts}{One or multiple concept definitions, for example https://sensingclues.poolparty.biz/SCCSSOntology/186. See https://sensingclues.poolparty.biz/GraphViews/ for all available concepts.}
 
 \item{updateProgress}{A function to update a progress bar object, default is NULL.}
 
@@ -37,7 +39,7 @@ get_observations(
 
 \item{url}{A Sensing Clues URL, default is https://focus.sensingclues.org/.}
 
-\item{lang}{Language in which the concepts are shown, default is english.}
+\item{lang}{Language in which the concepts are shown, default is English.}
 }
 \value{
 A data frame with all observations collected by the defined group(s), within the given date range.
