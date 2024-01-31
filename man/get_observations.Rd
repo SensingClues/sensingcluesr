@@ -19,9 +19,9 @@ get_observations(
 )
 }
 \arguments{
-\item{cookie}{A cookie obtained by login_cluey().}
+\item{cookie}{A cookie obtained by \code{\link[=login_cluey]{login_cluey()}}.}
 
-\item{group}{One or multiple group identification character string(s), see which groups you have access to with get_groups().}
+\item{group}{One or multiple group identification character string(s), see which groups you have access to with \code{\link[=get_groups]{get_groups()}}.}
 
 \item{bounds}{Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format}
 
@@ -31,13 +31,13 @@ get_observations(
 
 \item{aoi}{Area of interest.}
 
-\item{filteredConcepts}{One or multiple concept definitions, for example https://sensingclues.poolparty.biz/SCCSSOntology/186. See https://sensingclues.poolparty.biz/GraphViews/ for all available concepts.}
+\item{filteredConcepts}{One or multiple concept definitions, for example \verb{https://sensingclues.poolparty.biz/SCCSSOntology/186}. See \url{https://sensingclues.poolparty.biz/GraphViews/} for all available concepts.}
 
 \item{updateProgress}{A function to update a progress bar object, default is NULL.}
 
-\item{allAttributes}{TRUE or FALSE, allows you to collect more attributes for the observations.}
+\item{allAttributes}{A boolean. Allows you to collect more attributes for the observations.}
 
-\item{url}{A Sensing Clues URL, default is https://focus.sensingclues.org/.}
+\item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 
 \item{lang}{Language in which the concepts are shown, default is English.}
 }
@@ -48,6 +48,8 @@ A data frame with all observations collected by the defined group(s), within the
 Retrieve observation data
 }
 \examples{
+\dontshow{if (!is.null(login_cluey())) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 df <- get_observations(cookie, group = 'focus-project-1234') # demo group
+\dontshow{\}) # examplesIf}
 }

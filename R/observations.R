@@ -1,21 +1,21 @@
 #' Retrieve observation data
 #'
-#' @param cookie A cookie obtained by login_cluey().
-#' @param group One or multiple group identification character string(s), see which groups you have access to with get_groups().
+#' @param cookie A cookie obtained by [login_cluey()].
+#' @param group One or multiple group identification character string(s), see which groups you have access to with [get_groups()].
 #' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format
 #' @param from Start date.
 #' @param to End date.
 #' @param aoi Area of interest.
-#' @param filteredConcepts One or multiple concept definitions, for example https://sensingclues.poolparty.biz/SCCSSOntology/186. See https://sensingclues.poolparty.biz/GraphViews/ for all available concepts.
+#' @param filteredConcepts One or multiple concept definitions, for example `https://sensingclues.poolparty.biz/SCCSSOntology/186`. See [https://sensingclues.poolparty.biz/GraphViews/](https://sensingclues.poolparty.biz/GraphViews/) for all available concepts.
 #' @param updateProgress A function to update a progress bar object, default is NULL.
-#' @param allAttributes TRUE or FALSE, allows you to collect more attributes for the observations.
-#' @param url A Sensing Clues URL, default is https://focus.sensingclues.org/.
+#' @param allAttributes A boolean. Allows you to collect more attributes for the observations.
+#' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
 #' @param lang Language in which the concepts are shown, default is English.
 #'
 #' @return A data frame with all observations collected by the defined group(s), within the given date range.
 #' @export
 #'
-#' @examples
+#' @examplesIf !is.null(login_cluey())
 #' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 #' df <- get_observations(cookie, group = 'focus-project-1234') # demo group
 get_observations <- function(cookie,
