@@ -12,13 +12,13 @@ get_groups(
 )
 }
 \arguments{
-\item{cookie}{A cookie obtained by login_cluey().}
+\item{cookie}{A cookie obtained by \code{\link[=login_cluey]{login_cluey()}}.}
 
 \item{from}{Start date.}
 
 \item{to}{End date.}
 
-\item{url}{A Sensing Clues URL, default is https://focus.sensingclues.org/.}
+\item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 }
 \value{
 A data frame representing the data sources you have access to.

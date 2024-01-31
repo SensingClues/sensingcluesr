@@ -14,20 +14,20 @@ get_concept_counts(
 )
 }
 \arguments{
-\item{cookie}{A cookie obtained by login_cluey().}
+\item{cookie}{A cookie obtained by \code{\link[=login_cluey]{login_cluey()}}.}
 
-\item{group}{One or multiple group identification character string(s), see which groups you have access to with get_groups().}
+\item{group}{One or multiple group identification character string(s), see which groups you have access to with \code{\link[=get_groups]{get_groups()}}.}
 
 \item{from}{Start date.}
 
 \item{to}{End date.}
 
-\item{url}{A Sensing Clues URL, default is https://focus.sensingclues.org/.}
+\item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 
 \item{lang}{Language in which the concepts are shown, default is English.}
 }
 \value{
-A list of concept definitions and their frequencies collected by the defined group(s), within the given date range. See https://sensingclues.poolparty.biz/GraphViews/ for all available concepts.
+A list of concept definitions and their frequencies collected by the defined group(s), within the given date range. See \url{https://sensingclues.poolparty.biz/GraphViews/} for all available concepts.
 }
 \description{
 Frequency of concepts

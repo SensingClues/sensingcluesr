@@ -2,7 +2,7 @@
 #'
 #' @param username Your Cluey username.
 #' @param password Your Cluey password.
-#' @param url A Sensing Clues URL, default is https://focus.sensingclues.org/.
+#' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
 #'
 #' @return A cookie object
 #' @export

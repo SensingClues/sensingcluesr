@@ -15,7 +15,7 @@ login_cluey(
 
 \item{password}{Your Cluey password.}
 
-\item{url}{A Sensing Clues URL, default is https://focus.sensingclues.org/.}
+\item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 }
 \value{
 A cookie object
