@@ -79,7 +79,7 @@ get_observations <- function(cookie,
   httr::handle_reset(url_search_results)
   result <- httr::POST(url_search_results, body = query, encode = "raw",
                        httr::content_type_json(), httr::set_cookies(focus2 = utils::URLdecode(cookie$value))) # verbose())
-  searchResult <- content(result)
+  searchResult <- httr::content(result)
 
   # setup empty dataframe
   OBSERVATIONS <- data.frame()
@@ -124,7 +124,7 @@ get_observations <- function(cookie,
     httr::handle_reset(url_search_results)
     result <- httr::POST(url_search_results, body = query, encode = "raw",
                          httr::content_type_json(), httr::set_cookies(focus2 = utils::URLdecode(cookie$value)))
-    searchResult <- content(result)
+    searchResult <- httr::content(result)
 
     # number of results in first page
     Nobservations <- length(searchResult$results)
