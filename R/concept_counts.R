@@ -1,3 +1,18 @@
+#' Frequency of concepts
+#'
+#' @param cookie A cookie obtained by login_cluey().
+#' @param group One or multiple group identification character string(s), see which groups you have access to with get_groups().
+#' @param from Start date.
+#' @param to End date.
+#' @param url A Sensing Clues URL, default is https://focus.sensingclues.org/.
+#' @param lang Language in which the concepts are shown, default is English.
+#'
+#' @return A list of concept definitions and their frequencies collected by the defined group(s), within the given date range. See https://sensingclues.poolparty.biz/GraphViews/ for all available concepts.
+#' @export
+#'
+#' @examples
+#' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
+#' lst <- get_concept_counts(cookie, group = 'focus-project-1234') # demo group
 get_concept_counts <- function(cookie,
                                group,
                                from = "1900-01-01",
