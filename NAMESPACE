@@ -3,5 +3,7 @@
 export(get_concept_counts)
 export(get_groups)
 export(get_hierarchy)
+export(get_id)
+export(get_label)
 export(get_observations)
 export(login_cluey)

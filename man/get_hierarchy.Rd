@@ -2,14 +2,26 @@
 % Please edit documentation in R/ontology.R
 \name{get_hierarchy}
 \alias{get_hierarchy}
+\alias{get_id}
+\alias{get_label}
 \title{Querying Sensing Clues' ontologies}
 \usage{
 get_hierarchy(url = "https://focus.sensingclues.org/", lang = "en")
+
+get_id(label, hierarchy)
+
+get_label(id, hierarchy)
 }
 \arguments{
 \item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 
 \item{lang}{Language in which the concepts are shown, default is English.}
+
+\item{label}{Textual concept definiton, for example \verb{Human-wildlife conflict}.}
+
+\item{hierarchy}{Object retrieved by \code{\link[=get_hierarchy]{get_hierarchy()}}.}
+
+\item{id}{Concept identification, for example \verb{https://sensingclues.poolparty.biz/SCCSSOntology/106}.}
 }
 \value{
 Nested list representing multiple ontologies.
@@ -22,4 +34,10 @@ lst <- get_hierarchy() # you have to be logged in to https://focus.sensingclues.
 
 # inspect a single concept
 cncpt <- lst$concepts[[1]]
+
+# look up the ID for a given concept label
+get_id("Human-wildlife conflict", lst)
+
+# look up the label for a given concept ID
+get_label("https://sensingclues.poolparty.biz/SCCSSOntology/106", lst)
 }
