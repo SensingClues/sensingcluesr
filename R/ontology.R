@@ -1,3 +1,16 @@
+#' Querying Sensing Clues' ontologies
+#'
+#' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
+#' @param lang Language in which the concepts are shown, default is English.
+#'
+#' @return Nested list representing multiple ontologies.
+#' @export
+#'
+#' @examples
+#' lst <- get_hierarchy() # you have to be logged in to https://focus.sensingclues.org/ to get access
+#'
+#' # inspect a single concept
+#' cncpt <- lst$concepts[[1]]
 get_hierarchy <- function(url = "https://focus.sensingclues.org/", lang = "en") {
   url_onto <- paste0(url, "api/ontology/all/hierarchy?language=", lang)
   # "https://focus.sensingclues.org/api/ontology/all/hierarchy?language=en"
