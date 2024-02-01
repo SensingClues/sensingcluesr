@@ -17,6 +17,10 @@
 #'
 #' # look up the label for a given concept ID
 #' get_label("https://sensingclues.poolparty.biz/SCCSSOntology/106", lst)
+#'
+#' # get the parent ID/label for a given concept ID/label
+#' get_parent_id("https://sensingclues.poolparty.biz/SCCSSOntology/106", lst)
+#' get_parent_label("Human-wildlife conflict", lst)
 get_hierarchy <- function(url = "https://focus.sensingclues.org/", lang = "en") {
   url_onto <- paste0(url, "api/ontology/all/hierarchy?language=", lang)
   # "https://focus.sensingclues.org/api/ontology/all/hierarchy?language=en"
@@ -39,10 +43,14 @@ get_label <- function(id, hierarchy) {
   hierarchy$concepts[sapply(hierarchy$concepts, function(y) id %in% y$id)][[1]]$label
 }
 
+#' @rdname get_hierarchy
+#' @export
 get_parent_id <- function(id, hierarchy) {
   hierarchy$concepts[sapply(hierarchy$concepts, function(y) id %in% y$id)][[1]]$parent
 }
 
+#' @rdname get_hierarchy
+#' @export
 get_parent_label <- function(label, hierarchy) {
   parent <- hierarchy$concepts[sapply(hierarchy$concepts, function(y) label %in% y$label)][[1]]$parent
   get_label(parent, hierarchy)

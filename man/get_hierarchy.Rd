@@ -4,6 +4,8 @@
 \alias{get_hierarchy}
 \alias{get_id}
 \alias{get_label}
+\alias{get_parent_id}
+\alias{get_parent_label}
 \title{Querying Sensing Clues' ontologies}
 \usage{
 get_hierarchy(url = "https://focus.sensingclues.org/", lang = "en")
@@ -11,6 +13,10 @@ get_hierarchy(url = "https://focus.sensingclues.org/", lang = "en")
 get_id(label, hierarchy)
 
 get_label(id, hierarchy)
+
+get_parent_id(id, hierarchy)
+
+get_parent_label(label, hierarchy)
 }
 \arguments{
 \item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
@@ -40,4 +46,8 @@ get_id("Human-wildlife conflict", lst)
 
 # look up the label for a given concept ID
 get_label("https://sensingclues.poolparty.biz/SCCSSOntology/106", lst)
+
+# get the parent ID/label for a given concept ID/label
+get_parent_id("https://sensingclues.poolparty.biz/SCCSSOntology/106", lst)
+get_parent_label("Human-wildlife conflict", lst)
 }
