@@ -38,3 +38,12 @@ get_id <- function(label, hierarchy) {
 get_label <- function(id, hierarchy) {
   hierarchy$concepts[sapply(hierarchy$concepts, function(y) id %in% y$id)][[1]]$label
 }
+
+get_parent_id <- function(id, hierarchy) {
+  hierarchy$concepts[sapply(hierarchy$concepts, function(y) id %in% y$id)][[1]]$parent
+}
+
+get_parent_label <- function(label, hierarchy) {
+  parent <- hierarchy$concepts[sapply(hierarchy$concepts, function(y) label %in% y$label)][[1]]$parent
+  get_label(parent, hierarchy)
+}
