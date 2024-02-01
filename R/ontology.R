@@ -16,3 +16,11 @@ get_hierarchy <- function(url = "https://focus.sensingclues.org/", lang = "en") 
   # "https://focus.sensingclues.org/api/ontology/all/hierarchy?language=en"
   httr::content(httr::GET(url_onto))
 }
+
+get_id <- function(label, hierarchy) {
+  hierarchy$concepts[sapply(hierarchy$concepts, function(y) label %in% y$label)][[1]]$id
+}
+
+get_label <- function(id, hierarchy) {
+  hierarchy$concepts[sapply(hierarchy$concepts, function(y) id %in% y$id)][[1]]$label
+}
