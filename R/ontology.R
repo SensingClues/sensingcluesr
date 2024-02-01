@@ -55,3 +55,16 @@ get_parent_label <- function(label, hierarchy) {
   parent <- hierarchy$concepts[sapply(hierarchy$concepts, function(y) label %in% y$label)][[1]]$parent
   get_label(parent, hierarchy)
 }
+
+get_children_id <- function(id, hierarchy) {
+  unlist(hierarchy$concepts[sapply(hierarchy$concepts, function(y) id %in% y$id)][[1]]$child)
+}
+
+get_children_label <- function(label, hierarchy) {
+  children <- unlist(hierarchy$concepts[sapply(hierarchy$concepts, function(y) label %in% y$label)][[1]]$child)
+  result <- c()
+  for (item in children) {
+    result <- c(result, get_label(item, hierarchy))
+  }
+  return(result)
+}
