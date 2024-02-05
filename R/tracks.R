@@ -1,3 +1,22 @@
+#' Retrieve tracks metadata
+#'
+#' @param cookie A cookie obtained by [login_cluey()].
+#' @param group One or multiple group identification character string(s), see which groups you have access to with [get_groups()].
+#' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format.
+#' @param from Start date.
+#' @param to End date.
+#' @param aoi Area of interest.
+#' @param patrolType One or multiple concept definitions, for example `https://sensingclues.poolparty.biz/SCCSSOntology/631`. See [https://sensingclues.poolparty.biz/GraphViews/](https://sensingclues.poolparty.biz/GraphViews/) for all available concepts.
+#' @param updateProgress A function to update a progress bar object, default is NULL.
+#' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
+#' @param lang Language in which the concepts are shown, default is English.
+#'
+#' @return A data frame with all tracks collected by the defined group(s), within the given date range.
+#' @export
+#'
+#' @examplesIf !is.null(login_cluey())
+#' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
+#' df <- get_tracks(cookie, group = 'focus-project-1234') # demo group
 get_tracks <- function(cookie,
                        group,
                        bounds = list(north = 90, east = 180, south = -89, west = -179),
