@@ -3,6 +3,7 @@
 \name{get_tracks}
 \alias{get_tracks}
 \alias{get_track}
+\alias{get_track_as_geojson}
 \title{Retrieve tracks metadata}
 \usage{
 get_tracks(
@@ -19,6 +20,13 @@ get_tracks(
 )
 
 get_track(
+  cookie,
+  trackId,
+  url = "https://focus.sensingclues.org/",
+  lang = "en"
+)
+
+get_track_as_geojson(
   cookie,
   trackId,
   url = "https://focus.sensingclues.org/",
@@ -62,5 +70,8 @@ df <- get_tracks(cookie, group = 'focus-project-1234') # demo group
 # get extra details on a single track
 id <- df$entityId[1]
 lst <- get_track(cookie, trackId = id)
+
+# get a single track in JSON format
+json <- get_track_as_geojson(cookie, trackId = id)
 \dontshow{\}) # examplesIf}
 }

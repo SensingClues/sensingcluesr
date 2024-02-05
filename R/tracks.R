@@ -21,6 +21,9 @@
 #' # get extra details on a single track
 #' id <- df$entityId[1]
 #' lst <- get_track(cookie, trackId = id)
+#'
+#' # get a single track in JSON format
+#' json <- get_track_as_geojson(cookie, trackId = id)
 get_tracks <- function(cookie,
                        group,
                        bounds = list(north = 90, east = 180, south = -89, west = -179),
@@ -203,6 +206,8 @@ get_track <- function(cookie, trackId, url = "https://focus.sensingclues.org/", 
   trackEnveloppe
 }
 
+#' @rdname get_tracks
+#' @export
 get_track_as_geojson <- function(cookie, trackId, url = "https://focus.sensingclues.org/", lang = "en") {
   message(paste0("Start fetching track ", trackId, " as geojson"))
 
