@@ -2,6 +2,7 @@
 % Please edit documentation in R/tracks.R
 \name{get_tracks}
 \alias{get_tracks}
+\alias{get_track}
 \title{Retrieve tracks metadata}
 \usage{
 get_tracks(
@@ -13,6 +14,13 @@ get_tracks(
   aoi = "",
   patrolType = NULL,
   updateProgress = NULL,
+  url = "https://focus.sensingclues.org/",
+  lang = "en"
+)
+
+get_track(
+  cookie,
+  trackId,
   url = "https://focus.sensingclues.org/",
   lang = "en"
 )
@@ -37,6 +45,8 @@ get_tracks(
 \item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 
 \item{lang}{Language in which the concepts are shown, default is English.}
+
+\item{trackId}{Identification character string of a single track.}
 }
 \value{
 A data frame with all tracks collected by the defined group(s), within the given date range.
@@ -48,5 +58,9 @@ Retrieve tracks metadata
 \dontshow{if (!is.null(login_cluey())) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 df <- get_tracks(cookie, group = 'focus-project-1234') # demo group
+
+# get extra details on a single track
+id <- df$entityId[1]
+lst <- get_track(cookie, trackId = id)
 \dontshow{\}) # examplesIf}
 }
