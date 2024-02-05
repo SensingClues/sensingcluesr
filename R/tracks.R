@@ -188,6 +188,14 @@ get_tracks <- function(cookie,
   return(TRACKS)
 }
 
+get_track <- function(cookie, trackId, url = "https://focus.sensingclues.org/", lang = "en") {
+  # https://focus.sensingclues.org/api/crud/GeoFeature/G3588368-69d14fa1-64d9-40fd-a11a-1112ecca1e95?language=en
+  url_search_results <- paste0(url, "api/crud/GeoFeature/", trackId, "?language=", lang)
+  httr::handle_reset(url_search_results)
+  trackEnveloppe <- httr::content(httr::GET(url_search_results, httr::set_cookies(focus2 = utils::URLdecode(cookie$value))))
+  trackEnveloppe
+}
+
 # Helpers ---------------------------------------------------------------------
 
 check_bounds <- function(bounds) {
