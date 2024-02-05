@@ -37,7 +37,7 @@ get_tracks <- function(cookie,
 
   # bounds check
   if (!is.null(bounds)) {
-    bounds <- bounds
+    bounds <- check_bounds(bounds)
     message(paste("North ", bounds$north, "East ", bounds$east, "South ", bounds$south, "West ", bounds$west))
   } else {
     bounds <- list(north = 90, east = 180, south = -89, west = -179)
@@ -186,4 +186,23 @@ get_tracks <- function(cookie,
   message(paste("Successfully fetched", nrow(TRACKS), "tracks in", dt["elapsed"], "seconds"))
 
   return(TRACKS)
+}
+
+# Helpers ---------------------------------------------------------------------
+
+check_bounds <- function(bounds) {
+  # check if bounds are in range so marklogic does not return zero results
+  if (bounds$north > 90) {
+    bounds$north <- 90
+  }
+  if (bounds$south < -89) {
+    bounds$south <- -89
+  }
+  if (bounds$east > 180){
+    bounds$east <- 180
+  }
+  if (bounds$west < -179) {
+    bounds$west <- -179
+  }
+  return(bounds)
 }
