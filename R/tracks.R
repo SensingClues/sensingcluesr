@@ -203,6 +203,31 @@ get_track <- function(cookie, trackId, url = "https://focus.sensingclues.org/", 
   trackEnveloppe
 }
 
+get_track_as_geojson <- function(cookie, trackId, url = "https://focus.sensingclues.org/", lang = "en") {
+  message(paste0("Start fetching track ", trackId, " as geojson"))
+
+  # process time
+  ptm <- proc.time()
+  # select the proper source URL
+  url_search_results <- paste0(url, "api/map/all/track/0/features?language=", lang)
+
+  query <- paste0('
+    {"filters":
+        {"queryText": "entityId:\\"', trackId, '\\""},
+      "options": {},
+      "start": 1,
+      "pageLength": 500
+    }
+  ')
+
+  # reset cookies
+  httr::handle_reset(url_search_results)
+  result <- httr::POST(url_search_results, body = query, httr::content_type_json(), httr::set_cookies(focus2 = utils::URLdecode(cookie$value)))
+  trackGeojson <- httr::content(result)
+
+  return(jsonlite::toJSON(trackGeojson, auto_unbox = TRUE))
+}
+
 # Helpers ---------------------------------------------------------------------
 
 check_bounds <- function(bounds) {
