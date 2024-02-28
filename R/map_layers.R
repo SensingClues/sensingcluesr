@@ -1,3 +1,16 @@
+#' Access to geodata
+#'
+#' @param cookie A cookie obtained by [login_cluey()].
+#' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
+#'
+#' @return A data frame representing the geodata you have access to. There are
+#' four columns including a name, a data source identifier consisting of two
+#' parts, a project id and a layer id, and the type of geometry of the layer.
+#' @export
+#'
+#' @examplesIf !is.null(login_cluey())
+#' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
+#' df <- get_layer_details(cookie)
 get_layer_details <- function(cookie, url = "https://focus.sensingclues.org/") {
   # get all layers
   l <- get_all_layers(cookie, url)
