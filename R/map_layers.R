@@ -31,6 +31,20 @@ get_layer_details <- function(cookie, url = "https://focus.sensingclues.org/") {
   return(df)
 }
 
+get_layer_features <- function(projectId, layerId, cookie, url = "https://focus.sensingclues.org/") {
+  # /api/map/{searchType}/{projectId}/{layerId}/features
+  searchType <- "all"
+
+  # select the proper source URL
+  url_search_results <- paste0(url, "api/map/", searchType, "/", projectId, "/", layerId, "/features")
+
+  # initial call to get total and number of pages to get
+  httr::handle_reset(url_search_results)
+  result <- httr::POST(url_search_results, httr::content_type_json(), httr::set_cookies(focus2 = utils::URLdecode(cookie$value)))
+  layer <- httr::content(result)
+  return(geojsonsf::geojson_sf(jsonlite::toJSON(layer, auto_unbox = TRUE)))
+}
+
 # Helpers ---------------------------------------------------------------------
 
 get_all_layers <- function(cookie, url = "https://focus.sensingclues.org/") {
