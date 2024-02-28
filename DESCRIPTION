@@ -1,18 +1,17 @@
-Package: wildcatr
+Package: sensingcluesr
 Type: Package
 Title: Retrieve Data From Sensing Clues Platform
 Version: 0.1.0
 Authors@R: c(
     person("Melanie", "Arp", , "melanie.arp@sensingclues.org", role = c("aut", "cre")),
-    person("Hugo", "Koopmans", role = "aut")
+    person("Hugo", "Koopmans", role = "aut"),
+    person("Chiel", "Bakkeren", role = "aut")
   )
 Description: Functions to retrieve data that you have access to on the Sensing 
-    Clues platform. This is the most important building block of the Wildlife 
-    Conservation Analytical Toolbox (WildCAT), it allows you to inspect and 
-    perform further analysis on your data. The different data types which are 
-    available through the Sensing Clues platform are observations, tracks, map 
-    layers and ontologies.
-License: AGPL (>= 3)
+    Clues platform. This allows you to inspect your data and perform further 
+    analyses. The different data types that are available are observations, 
+    tracks, map layers and ontologies.
+License: AGPL (>= 3) + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

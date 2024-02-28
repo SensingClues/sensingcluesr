@@ -43,16 +43,16 @@ get_track_counts <- function(cookie,
   NTrackTypes <- length(counts)
   track_counts <- data.frame()
   if (NTrackTypes != 0) {
-    h <- wildcatr::get_hierarchy(url = url, lang = lang)
+    h <- sensingcluesr::get_hierarchy(url = url, lang = lang)
     for (i in 1:NTrackTypes) {
       id <- counts[[i]]$'_value' # e.g. https://sensingclues.poolparty.biz/SCCSSOntology/0
       # filter out scheme concepts
       if (!id %in% unlist(h$schemes)) {
-        parent <- wildcatr::get_parent_id(id, h)
+        parent <- sensingcluesr::get_parent_id(id, h)
         # filter out concepts that do not belong to the top concept for tracks
         if (parent == "https://sensingclues.poolparty.biz/SCCSSOntology/42" | # concept 42 = Tracks
             parent == "https://sensingclues.poolparty.biz/SCCSSOntologyv3/136") { # concept 136 = Animal tracks
-          name <- wildcatr::get_label(id, h)
+          name <- sensingcluesr::get_label(id, h)
           count <- counts[[i]]$frequency
           track_counts <- rbind(track_counts, c(id, name, count))
         }
