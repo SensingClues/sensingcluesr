@@ -11,6 +11,11 @@
 #' @examplesIf !is.null(login_cluey())
 #' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 #' df <- get_layer_details(cookie)
+#'
+#' # retrieve a layer in simple feature collection (sfc) format
+#' projectId <- df$pid[1]
+#' layerId <- df$lid[1]
+#' sf <- get_layer_features(projectId, layerId, cookie)
 get_layer_details <- function(cookie, url = "https://focus.sensingclues.org/") {
   # get all layers
   l <- get_all_layers(cookie, url)
@@ -31,6 +36,10 @@ get_layer_details <- function(cookie, url = "https://focus.sensingclues.org/") {
   return(df)
 }
 
+#' @rdname get_layer_details
+#' @param projectId An integer representing a project identifier, obtained by [get_layer_details()].
+#' @param layerId An integer representing a layer identifier, obtained by [get_layer_details()].
+#' @export
 get_layer_features <- function(projectId, layerId, cookie, url = "https://focus.sensingclues.org/") {
   # /api/map/{searchType}/{projectId}/{layerId}/features
   searchType <- "all"

@@ -2,14 +2,26 @@
 % Please edit documentation in R/map_layers.R
 \name{get_layer_details}
 \alias{get_layer_details}
+\alias{get_layer_features}
 \title{Access to geodata}
 \usage{
 get_layer_details(cookie, url = "https://focus.sensingclues.org/")
+
+get_layer_features(
+  projectId,
+  layerId,
+  cookie,
+  url = "https://focus.sensingclues.org/"
+)
 }
 \arguments{
 \item{cookie}{A cookie obtained by \code{\link[=login_cluey]{login_cluey()}}.}
 
 \item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
+
+\item{projectId}{An integer representing a project identifier, obtained by \code{\link[=get_layer_details]{get_layer_details()}}.}
+
+\item{layerId}{An integer representing a layer identifier, obtained by \code{\link[=get_layer_details]{get_layer_details()}}.}
 }
 \value{
 A data frame representing the geodata you have access to. There are
@@ -23,5 +35,10 @@ Access to geodata
 \dontshow{if (!is.null(login_cluey())) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 df <- get_layer_details(cookie)
+
+# retrieve a layer in simple feature collection (sfc) format
+projectId <- df$pid[1]
+layerId <- df$lid[1]
+sf <- get_layer_features(projectId, layerId, cookie)
 \dontshow{\}) # examplesIf}
 }
