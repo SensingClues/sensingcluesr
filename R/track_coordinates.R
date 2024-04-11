@@ -46,7 +46,7 @@ get_track_coordinates <- function(cookie,
     cncpts <- "[]"
   }
 
-  page_length <- 500 # standard maximum on the api, decreasing causes longer processing times
+  page_length <- 500 # optimal value regarding query performance
   p <- 1 # page
   Ntracks <- page_length # to start the while loop
   TRACKS <- NULL # initiate the result

@@ -58,7 +58,7 @@ get_tracks <- function(cookie,
   }
 
   # page length
-  page_length <- 50
+  page_length <- 500 # optimal value regarding query performance
 
   # select the proper source URL
   url_search_results <- paste0(url, "api/search/all/results?language=", lang)
@@ -105,8 +105,7 @@ get_tracks <- function(cookie,
   #updateProgress$set(value = total)
 
   # expected number of results
-  message(paste0("Expected total : ", as.character(total)))
-  message(paste0("Number of pages : ", as.character(pages)))
+  message(paste0("Expecting total ", as.character(total), " results in ", as.character(pages), " number of pages"))
 
   # if pages < 1 then skip
 
