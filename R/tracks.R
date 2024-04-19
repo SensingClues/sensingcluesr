@@ -58,7 +58,7 @@ get_tracks <- function(cookie,
   }
 
   # page length
-  page_length <- 500 # optimal value regarding query performance
+  page_length <- 50 # optimal value regarding query performance and user experience
 
   # select the proper source URL
   url_search_results <- paste0(url, "api/search/all/results?language=", lang)
