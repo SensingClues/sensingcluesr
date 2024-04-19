@@ -7,7 +7,7 @@
 get_observations(
   cookie,
   group,
-  bounds = list(north = 90, east = 180, south = -89, west = -179),
+  bounds = NULL,
   from = Sys.Date() - 30,
   to = Sys.Date(),
   aoi = "",
@@ -23,7 +23,7 @@ get_observations(
 
 \item{group}{One or multiple group identification character string(s), see which groups you have access to with \code{\link[=get_groups]{get_groups()}}.}
 
-\item{bounds}{Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format}
+\item{bounds}{Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example \code{list(north=15, east=10, south=-25, west=50)}.}
 
 \item{from}{Start date.}
 

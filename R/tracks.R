@@ -2,7 +2,7 @@
 #'
 #' @param cookie A cookie obtained by [login_cluey()].
 #' @param group One or multiple group identification character string(s), see which groups you have access to with [get_groups()].
-#' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format.
+#' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example `list(north=15, east=10, south=-25, west=50)`.
 #' @param from Start date.
 #' @param to End date.
 #' @param aoi Area of interest.
@@ -26,7 +26,7 @@
 #' json <- get_track_as_geojson(cookie, trackId = id)
 get_tracks <- function(cookie,
                        group,
-                       bounds = list(north = 90, east = 180, south = -89, west = -179),
+                       bounds = NULL, # list(north = 90, east = 180, south = -89, west = -179)
                        from = Sys.Date() - 30,
                        to = Sys.Date(),
                        aoi = "",
@@ -45,9 +45,10 @@ get_tracks <- function(cookie,
   # bounds check
   if (!is.null(bounds)) {
     bounds <- check_bounds(bounds)
+    boundaries <- paste0('{"south":', bounds$south, ',"west":', bounds$west, ',"north":', bounds$north, ',"east":', bounds$east, '}')
     message(paste("North ", bounds$north, "East ", bounds$east, "South ", bounds$south, "West ", bounds$west))
   } else {
-    bounds <- list(north = 90, east = 180, south = -89, west = -179)
+    boundaries <- "[]"
   }
 
   # concepts to json array
@@ -69,7 +70,7 @@ get_tracks <- function(cookie,
     {"filters":
         {"geoQuery":
             {"operator":"intersects",
-              "mapBounds":{"south":', bounds$south, ',"west":', bounds$west, ',"north":', bounds$north, ',"east":', bounds$east, '},
+              "mapBounds": ', boundaries,',
               "drawings":[', aoi, ']
             },
           "dateTimeRange":
@@ -117,7 +118,7 @@ get_tracks <- function(cookie,
       {"filters":
           {"geoQuery":
               {"operator":"intersects",
-                "mapBounds":{"south":', bounds$south, ',"west":', bounds$west, ',"north":', bounds$north, ',"east":', bounds$east, '},
+                "mapBounds": ', boundaries,',
                 "drawings":[', aoi, ']
               },
             "dateTimeRange":

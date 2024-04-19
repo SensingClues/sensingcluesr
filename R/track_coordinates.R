@@ -2,7 +2,7 @@
 #'
 #' @param cookie A cookie obtained by [login_cluey()].
 #' @param group One or multiple group identification character string(s), see which groups you have access to with [get_groups()].
-#' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format.
+#' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example `list(north=15, east=10, south=-25, west=50)`.
 #' @param from Start date.
 #' @param to End date.
 #' @param aoi Area of interest.
@@ -20,7 +20,7 @@
 #' df <- get_track_coordinates(cookie, group = 'focus-project-1234') # demo group
 get_track_coordinates <- function(cookie,
                                   group,
-                                  bounds = list(north = 90, east = 180, south = -89, west = -179),
+                                  bounds = NULL, # list(north = 90, east = 180, south = -89, west = -179)
                                   from = Sys.Date() - 30,
                                   to = Sys.Date(),
                                   aoi = "",
@@ -38,6 +38,15 @@ get_track_coordinates <- function(cookie,
   url_search_results <- paste0(url, "api/map/all/track/0/features?language=", lang)
 
   grouparray <- jsonlite::toJSON(unlist(group))
+
+  # bounds check
+  if (!is.null(bounds)) {
+    bounds <- check_bounds(bounds) # helper function from tracks.R
+    boundaries <- paste0('{"south":', bounds$south, ',"west":', bounds$west, ',"north":', bounds$north, ',"east":', bounds$east, '}')
+    message(paste("North ", bounds$north, "East ", bounds$east, "South ", bounds$south, "West ", bounds$west))
+  } else {
+    boundaries <- "[]"
+  }
 
   # concepts to json array
   if (!is.null(concepts)) {
@@ -58,7 +67,7 @@ get_track_coordinates <- function(cookie,
       {"filters":
           {"geoQuery":
               {"operator":"intersects",
-                "mapBounds":{"south":', bounds$south, ',"west":', bounds$west, ',"north":', bounds$north, ',"east":', bounds$east, '},
+                "mapBounds": ', boundaries,',
                 "drawings":[', aoi, ']},
             "dateTimeRange":{"to":"', to, 'T24:00:00.000Z","from":"', from, 'T00:00:00.000Z"},
             "dataSources": ', grouparray, ',
