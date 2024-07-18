@@ -181,10 +181,9 @@ get_observations <- function(cookie,
         #   print(concepts)
         #   print(observation)
         # }
-        Nconcepts <- length(concepts)
-        for (j in 1:Nconcepts) {
-          conceptLabel <- concepts[[j]]$label
-          conceptId  <- concepts[[j]]$conceptId
+        for (concept in concepts) {
+          conceptLabel <- concept$label
+          conceptId  <- concept$conceptId
           # if concept is in filteredConcepts then we need it
           if(is.null(filteredConcepts)) {
             # we want all concepts
