@@ -196,59 +196,16 @@ get_observations <- function(cookie,
             }
           }
         } # end for concepts
-      } # end for observations
 
-      # only if extra attributes required for export (in ObservationReport app)
-      if (allAttributes == TRUE) {
-        message("GET ALL ATTRIBUTES")
-        # Do another loop over all observations to get and store the attributes in data frame dfa
-        if (p == 1) { # first page: initialise dfa and (overall) row numbering
-          dfa <- data.frame()
-          row <- 0
-        }
+        # retrieve the attributes of an observation
+        if (allAttributes == TRUE) {
+          if (!exists("df_attributes")) df_attributes <- data.frame() # initialize df_attributes
 
-        for (i in 1:Nobservations) { # i numbers the observations in the current page
-          row <- row + 1
-
-          # get to content
-          content <- searchResult$results[[i]]$extracted$content
-
-          # list the order of the elements of the content
-          contentNames <- c()
-          for (element in content) {
-            contentNames <- c(contentNames, names(element))
-          }
-
-          # message("Observation", row)
-          observation <- content[[which(contentNames == "Observation")]]$Observation
-          dfa[row, "observationId"] <- observation$observationId
-          # attributes
+          # unpack the attributes
           attributes <- content[[which(contentNames == "Observation")]]$Observation$attributes
-          # debugging
-          # message(print(attributes))
-          for (j in 1:length(attributes)) {
-            key <- attributes[[j]]$key
-            if (key == "description") next # skip "description" attribute, which we already have at observation level
-            # treat geometry/tags separately, because they will/may have more than 1 value
-            if (key == "geometry") {
-              varname <- "longitude"
-              value <- attributes[[j]]$value$coordinates[[1]]
-              dfa[row, varname] <- value
-              varname <- "latitude"
-              value <- attributes[[j]]$value$coordinates[[2]]
-              dfa[row, varname] <- value
-            } else if (key == "tags") {
-              varname <- key
-              value <- paste(unlist(attributes[[j]]$value),collapse = "|")
-              dfa[row, varname] <- value
-            } else if (length(attributes[[j]]$value) == 1 & !is.list(attributes[[j]]$value)) { # the other attributes will have only 1 value and not be a list
-              varname <- attributes[[j]]$key
-              value <- attributes[[j]]$value
-              dfa[row, varname] <- value
-            }
-          } # endfor attributes
-        } # endif allAttributes
-      } # endif Nobservations !=0
+          df_attributes <- dplyr::bind_rows(df_attributes, unpack_attributes(entityId, attributes))
+        }
+      } # end for observations
 
       # check if OBSERVATIONS
       if (nrow(OBSERVATIONS) != 0 & ncol(OBSERVATIONS) == 12) {
@@ -266,15 +223,17 @@ get_observations <- function(cookie,
     }
   } # end pagination
 
+  result <- OBSERVATIONS
+  if (allAttributes == TRUE) {
+    message("Adding attributes to the dataframe")
+    result <- dplyr::left_join(OBSERVATIONS, df_attributes, by = "entityId")
+  }
+
   # process time
   elapsed <- round(proc.time()["elapsed"] - ptm["elapsed"])
   message(paste("Successfully processed observations in", elapsed, "seconds"))
 
-  result <- OBSERVATIONS
-  if (allAttributes == TRUE) result <- list(OBSERVATIONS, dfa)
-
   return(result)
-
 }
 
 # Helpers ---------------------------------------------------------------------
