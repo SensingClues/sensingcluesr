@@ -32,6 +32,7 @@ get_tracks <- function(cookie,
                        aoi = "",
                        patrolType = NULL,
                        updateProgress = NULL,
+                       allAttributes = FALSE,
                        url = "https://focus.sensingclues.org/",
                        lang = "en") {
 
@@ -149,16 +150,23 @@ get_tracks <- function(cookie,
       for (i in 1:Ntracks) {
         # get to content
         content <- searchResult$results[[i]]$extracted$content
+
+        # list the order of the elements of the content
+        contentNames <- c()
+        for (element in content) {
+          contentNames <- c(contentNames, names(element))
+        }
+
         # headers
         #browser() # check to see if "team size" and "description" are now in the result
-        headers <- content[[1]]$headers
+        headers <- content[[which(contentNames == "headers")]]$headers
         entityId <- headers$entityId
         entityType <- headers$entityType
         projectId <- headers$projectId
         projectName <- headers$projectName
 
         # geofeature
-        geofeature <- content[[2]]$GeoFeature
+        geofeature <- content[[which(contentNames == "GeoFeature")]]$GeoFeature
         featureType <- geofeature$featureType
         # length in km
         length <- geofeature$length
@@ -178,7 +186,16 @@ get_tracks <- function(cookie,
           updateProgress(value = (p-1)*page_length+i, detail = text)
         }
         TRACKS <- rbind(TRACKS, c(entityType,entityId,projectId,projectName,featureType,length,startWhenChar,endWhenChar,agentName)) # skip patrolDuration here
-      } # end for
+
+        # retrieve the attributes of a track
+        if (allAttributes == TRUE) {
+          if (!exists("dfa")) dfa <- data.frame() # initialize dfa
+
+          # unpack the attributes
+          attributes <- content[[which(contentNames == "GeoFeature")]]$GeoFeature$attributes
+          dfa <- dplyr::bind_rows(dfa, unpack_attributes(entityId, attributes))
+        }
+      }
       # names
       names(TRACKS) <- c("entityType", "entityId", "projectId", "projectName",
                          "featureType", "length", "startWhenChar",
@@ -188,11 +205,17 @@ get_tracks <- function(cookie,
     }
   } # end pagination
 
+  result <- TRACKS
+  if (allAttributes == TRUE) {
+    message("Adding attributes to the dataframe")
+    result <- dplyr::left_join(TRACKS, dfa, by = "entityId")
+  }
+
   # process time
   dt <- proc.time() - ptm
-  message(paste("Successfully fetched", nrow(TRACKS), "tracks in", dt["elapsed"], "seconds"))
+  message(paste("Successfully fetched", nrow(result), "tracks in", dt["elapsed"], "seconds"))
 
-  return(TRACKS)
+  return(result)
 }
 
 #' @rdname get_tracks
