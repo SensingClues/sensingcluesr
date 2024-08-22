@@ -8,6 +8,7 @@
 #' @param aoi Area of interest.
 #' @param patrolType One or multiple concept definitions, for example `https://sensingclues.poolparty.biz/SCCSSOntology/631`. See [https://sensingclues.poolparty.biz/GraphViews/](https://sensingclues.poolparty.biz/GraphViews/) for all available concepts.
 #' @param updateProgress A function to update a progress bar object, default is NULL.
+#' @param allAttributes A boolean. Allows you to collect more attributes for the tracks.
 #' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
 #' @param lang Language in which the concepts are shown, default is English.
 #'

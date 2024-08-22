@@ -15,6 +15,7 @@ get_tracks(
   aoi = "",
   patrolType = NULL,
   updateProgress = NULL,
+  allAttributes = FALSE,
   url = "https://focus.sensingclues.org/",
   lang = "en"
 )
@@ -49,6 +50,8 @@ get_track_as_geojson(
 \item{patrolType}{One or multiple concept definitions, for example \verb{https://sensingclues.poolparty.biz/SCCSSOntology/631}. See \url{https://sensingclues.poolparty.biz/GraphViews/} for all available concepts.}
 
 \item{updateProgress}{A function to update a progress bar object, default is NULL.}
+
+\item{allAttributes}{A boolean. Allows you to collect more attributes for the tracks.}
 
 \item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 
