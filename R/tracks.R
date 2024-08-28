@@ -194,7 +194,16 @@ get_tracks <- function(cookie,
 
           # unpack the attributes
           attributes <- content[[which(contentNames == "GeoFeature")]]$GeoFeature$attributes
-          dfa <- dplyr::bind_rows(dfa, unpack_attributes(entityId, attributes))
+          attributes <- unpack_attributes(entityId, attributes)
+
+          # adding the end coordinates of the track, start coordinates are in the attributes
+          coords <- content[[which(contentNames == "GeoFeature")]]$GeoFeature$geometry$coordinates
+          if (is.list(coords)) {
+            attributes$end_longitude <- as.double(coords[[length(coords)]][[1]])
+            attributes$end_latitude <- as.double(coords[[length(coords)]][[2]])
+            attributes <- dplyr::relocate(attributes, c("end_longitude", "end_latitude"), .after = "start_latitude")
+          }
+          dfa <- dplyr::bind_rows(dfa, attributes)
         }
       }
       # names
