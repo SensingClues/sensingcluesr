@@ -45,7 +45,13 @@ get_hierarchy <- function(url = "https://focus.sensingclues.org/", lang = "en") 
 #' @param hierarchy Object retrieved by [get_hierarchy()].
 #' @export
 get_id <- function(label, hierarchy) {
-  hierarchy$concepts[sapply(hierarchy$concepts, function(y) label %in% y$label)][[1]]$id
+  # Try to extract the concept ID
+  tryCatch({
+    hierarchy$concepts[sapply(hierarchy$concepts, function(y) label %in% y$label)][[1]]$id
+  }, error = function(e) {
+    warning(paste("No concept ID found in hierarchy for:", label))
+    return(NULL) # Return NULL if an error occurs
+  })
 }
 
 #' @rdname get_hierarchy
@@ -53,35 +59,65 @@ get_id <- function(label, hierarchy) {
 #' @param hierarchy Object retrieved by [get_hierarchy()].
 #' @export
 get_label <- function(id, hierarchy) {
-  hierarchy$concepts[sapply(hierarchy$concepts, function(y) id %in% y$id)][[1]]$label
+  # Try to extract the concept label
+  tryCatch({
+    hierarchy$concepts[sapply(hierarchy$concepts, function(y) id %in% y$id)][[1]]$label
+  }, error = function(e) {
+    warning(paste("No concept label found in hierarchy for:", id))
+    return(NULL) # Return NULL if an error occurs
+  })
 }
 
 #' @rdname get_hierarchy
 #' @export
 get_parent_id <- function(id, hierarchy) {
-  hierarchy$concepts[sapply(hierarchy$concepts, function(y) id %in% y$id)][[1]]$parent
+  # Try to extract the parent concept ID
+  tryCatch({
+    hierarchy$concepts[sapply(hierarchy$concepts, function(y) id %in% y$id)][[1]]$parent
+  }, error = function(e) {
+    warning(paste("No parent concept ID found in hierarchy for:", id))
+    return(NULL) # Return NULL if an error occurs
+  })
 }
 
 #' @rdname get_hierarchy
 #' @export
 get_parent_label <- function(label, hierarchy) {
-  parent <- hierarchy$concepts[sapply(hierarchy$concepts, function(y) label %in% y$label)][[1]]$parent
-  get_label(parent, hierarchy)
+  # Try to extract the parent concept label
+  tryCatch({
+    parent <- hierarchy$concepts[sapply(hierarchy$concepts, function(y) label %in% y$label)][[1]]$parent
+    get_label(parent, hierarchy)
+  }, error = function(e) {
+    warning(paste("No parent concept label found in hierarchy for:", label))
+    return(NULL) # Return NULL if an error occurs
+  })
 }
 
 #' @rdname get_hierarchy
 #' @export
 get_children_id <- function(id, hierarchy) {
-  unlist(hierarchy$concepts[sapply(hierarchy$concepts, function(y) id %in% y$id)][[1]]$child)
+  # Try to extract the children concept ID(s)
+  tryCatch({
+    unlist(hierarchy$concepts[sapply(hierarchy$concepts, function(y) id %in% y$id)][[1]]$child)
+  }, error = function(e) {
+    warning(paste("No children concept ID(s) found in hierarchy for:", id))
+    return(NULL) # Return NULL if an error occurs
+  })
 }
 
 #' @rdname get_hierarchy
 #' @export
 get_children_label <- function(label, hierarchy) {
-  children <- unlist(hierarchy$concepts[sapply(hierarchy$concepts, function(y) label %in% y$label)][[1]]$child)
-  result <- c()
-  for (item in children) {
-    result <- c(result, get_label(item, hierarchy))
-  }
-  return(result)
+  # Try to extract the children concept label(s)
+  tryCatch({
+    children <- unlist(hierarchy$concepts[sapply(hierarchy$concepts, function(y) label %in% y$label)][[1]]$child)
+    result <- c()
+    for (item in children) {
+      result <- c(result, get_label(item, hierarchy))
+    }
+    return(result)
+  }, error = function(e) {
+    warning(paste("No children concept labels found in hierarchy for:", label))
+    return(NULL) # Return NULL if an error occurs
+  })
 }
