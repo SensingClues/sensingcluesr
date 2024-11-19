@@ -26,9 +26,18 @@
 #' get_children_id("https://sensingclues.poolparty.biz/SCCSSOntology/106", lst)
 #' get_children_label("Human-wildlife conflict", lst)
 get_hierarchy <- function(url = "https://focus.sensingclues.org/", lang = "en") {
-  url_onto <- paste0(url, "api/ontology/all/hierarchy?language=", lang)
-  # "https://focus.sensingclues.org/api/ontology/all/hierarchy?language=en"
-  httr::content(httr::GET(url_onto))
+  tryCatch({
+    url_onto <- paste0(url, "api/ontology/all/hierarchy?language=", lang)
+    # "https://focus.sensingclues.org/api/ontology/all/hierarchy?language=en"
+    result <- httr::content(httr::GET(url_onto))
+    if ("statusText" %in% names(result)) {
+      warning(result$statusText)
+      return(NULL)
+    } else {return(result)}
+  }, error = function(e) {
+    warning(paste("Unsuccessful at retrieving the hierarchy for:", url_onto))
+    return(NULL)
+  })
 }
 
 #' @rdname get_hierarchy
