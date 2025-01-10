@@ -124,9 +124,10 @@ get_track_coordinates <- function(cookie,
           coords <- coords[!duplicated(coords$timeslot), -4]
         }
 
-        # add the track identification
-        id <- trackDATA$features[[i]]$properties$EntityId
-        coords$trackId <- id
+        # add the track identification, agent and patrol type
+        coords$trackId <- trackDATA$features[[i]]$properties$EntityId
+        coords$agent <- trackDATA$features[[i]]$properties$AgentRef
+        coords$patrolType <- sub("^track/", "", trackDATA$features[[i]]$properties$EntityType)
 
         TRACKS <- rbind(TRACKS, coords)
         t <- t+1
