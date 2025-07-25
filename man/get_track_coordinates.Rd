@@ -14,6 +14,7 @@ get_track_coordinates(
   concepts = NULL,
   updateProgress = NULL,
   total_tracks = 500,
+  downsample = TRUE,
   url = "https://focus.sensingclues.org/",
   lang = "en"
 )
@@ -36,6 +37,8 @@ get_track_coordinates(
 \item{updateProgress}{A function to update a progress bar object, default is NULL.}
 
 \item{total_tracks}{The number of tracks to retrieve per page of the query.}
+
+\item{downsample}{A boolean. Allows you to downsample the traces per track.}
 
 \item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 

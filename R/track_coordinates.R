@@ -9,6 +9,7 @@
 #' @param concepts One or multiple concept definitions, for example `https://sensingclues.poolparty.biz/SCCSSOntology/631`. See [https://sensingclues.poolparty.biz/GraphViews/](https://sensingclues.poolparty.biz/GraphViews/) for all available concepts.
 #' @param updateProgress A function to update a progress bar object, default is NULL.
 #' @param total_tracks The number of tracks to retrieve per page of the query.
+#' @param downsample A boolean. Allows you to downsample the traces per track.
 #' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
 #' @param lang Language in which the concepts are shown, default is English.
 #'
@@ -27,6 +28,7 @@ get_track_coordinates <- function(cookie,
                                   concepts = NULL,
                                   updateProgress = NULL,
                                   total_tracks = 500,
+                                  downsample = TRUE,
                                   url = "https://focus.sensingclues.org/",
                                   lang = "en") {
   message(paste0("Start downloading tracks for group ", group, " from ", from, " to ", to))
@@ -119,9 +121,11 @@ get_track_coordinates <- function(cookie,
           coords$dt <- c(as.numeric(coords$time[-nrow(coords)] - coords$time[-1]),0)
           # order the data so that it increases in time
           coords <- coords[order(coords$time),]
-          # devide dataset into 5-minute time slots and save only 1 5-minute slot
-          coords$timeslot <- cumsum(coords$dt)%/%(60*5)
-          coords <- coords[!duplicated(coords$timeslot), -4]
+          if (downsample) {
+            # devide dataset into 5-minute time slots and save only 1 5-minute slot
+            coords$timeslot <- cumsum(coords$dt)%/%(60*5)
+            coords <- coords[!duplicated(coords$timeslot), -4]
+          }
         }
 
         # add the track identification, agent and patrol type
