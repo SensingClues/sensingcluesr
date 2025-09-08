@@ -244,12 +244,14 @@ unpack_attributes <- function(id, attributes) {
   dfa[1, "entityId"] <- id
 
   # unpack the attributes, adding a column for each element
-  for (j in 1:length(attributes)) {
-    key <- attributes[[j]]$key
-    if (key == "description") next # skip "description" attribute, which we already have at a higher level
-    # handle geometry/tags separately, because they will/may have more than 1 value
-    if (key == "geometry") {
-      coordinates <- attributes[[j]]$value$coordinates
+  for (j in seq_along(attributes)) {
+    attr <- attributes[[j]]
+    key <- attr$key
+    val <- attr$value
+
+    if (key == "description") next # skip "description" attribute, already exists at a higher level
+    if (key == "geometry") { # handle a geometry attribute
+      coordinates <- val$coordinates
       # for tracks the lat/lon are on a lower level and refer to the start location
       varname <- ifelse(is.list(coordinates[[1]]), "start_longitude", "longitude")
       value <- ifelse(is.list(coordinates[[1]]), coordinates[[1]][[1]], coordinates[[1]])
@@ -257,14 +259,14 @@ unpack_attributes <- function(id, attributes) {
       varname <- ifelse(is.list(coordinates[[1]]), "start_latitude", "latitude")
       value <- ifelse(is.list(coordinates[[1]]), coordinates[[1]][[2]], coordinates[[2]])
       dfa[1, varname] <- value
-    } else if (key == "tags") {
-      varname <- key
-      value <- paste(unlist(attributes[[j]]$value), collapse = "|")
-      dfa[1, varname] <- value
-    } else if (length(attributes[[j]]$value) == 1 & !is.list(attributes[[j]]$value)) { # the other attributes will have only 1 value and not be a list
-      varname <- attributes[[j]]$key
-      value <- attributes[[j]]$value
-      dfa[1, varname] <- value
+      next
+    }
+    if (is.list(val)) { # handle list (nested) attributes
+      dfa[1, key] <- paste(unlist(val, use.names = FALSE), collapse = " | ")
+      next
+    }
+    if (length(val) == 1 & !is.list(val)) { # handle scalar (single value) attributes
+      dfa[1, key] <- val
     }
   }
   return(dfa)
