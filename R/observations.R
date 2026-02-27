@@ -252,13 +252,11 @@ unpack_attributes <- function(id, attributes) {
     if (key == "description") next # skip "description" attribute, already exists at a higher level
     if (key == "geometry") { # handle a geometry attribute
       coordinates <- val$coordinates
-      # for tracks the lat/lon are on a lower level and refer to the start location
-      varname <- ifelse(is.list(coordinates[[1]]), "start_longitude", "longitude")
-      value <- ifelse(is.list(coordinates[[1]]), coordinates[[1]][[1]], coordinates[[1]])
-      dfa[1, varname] <- value
-      varname <- ifelse(is.list(coordinates[[1]]), "start_latitude", "latitude")
-      value <- ifelse(is.list(coordinates[[1]]), coordinates[[1]][[2]], coordinates[[2]])
-      dfa[1, varname] <- value
+      # ignore geometry for track (Geofeature) objects
+      if (!startsWith(id, "G")) {
+        dfa[1, "longitude"] <- coordinates[[1]]
+        dfa[1, "latitude"] <- coordinates[[2]]
+      }
       next
     }
     if (is.list(val)) { # handle list (nested) attributes

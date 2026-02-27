@@ -179,6 +179,15 @@ get_tracks <- function(cookie,
         # agent
         agentName <- geofeature$agent$agentName
 
+        # start and end coordinates of the track
+        coords <- geofeature$geometry$coordinates
+        if (is.list(coords)) {
+          start_longitude <- as.double(coords[[1]][[1]])
+          start_latitude <- as.double(coords[[1]][[2]])
+          end_longitude <- as.double(coords[[length(coords)]][[1]])
+          end_latitude <- as.double(coords[[length(coords)]][[2]])
+        }
+
         # Increment the progress bar, and update the detail text.
         #progress$inc(1/Ntracks, detail = paste("Doing part", i))
         # If we were passed a progress update function, call it
@@ -186,7 +195,10 @@ get_tracks <- function(cookie,
           text <- paste0("Track ", (p-1)*page_length+i, " out of ", total)
           updateProgress(value = (p-1)*page_length+i, detail = text)
         }
-        TRACKS <- rbind(TRACKS, c(entityType,entityId,projectId,projectName,featureType,length,startWhenChar,endWhenChar,agentName)) # skip patrolDuration here
+        TRACKS <- rbind(TRACKS, c(
+          entityType, entityId, projectId, projectName, featureType,
+          length, startWhenChar, endWhenChar, agentName,
+          start_longitude, start_latitude, end_longitude, end_latitude)) # skip patrolDuration here
 
         # retrieve the attributes of a track
         if (allAttributes == TRUE) {
@@ -196,20 +208,14 @@ get_tracks <- function(cookie,
           attributes <- content[[which(contentNames == "GeoFeature")]]$GeoFeature$attributes
           attributes <- unpack_attributes(entityId, attributes)
 
-          # adding the end coordinates of the track, start coordinates are in the attributes
-          coords <- content[[which(contentNames == "GeoFeature")]]$GeoFeature$geometry$coordinates
-          if (is.list(coords)) {
-            attributes$end_longitude <- as.double(coords[[length(coords)]][[1]])
-            attributes$end_latitude <- as.double(coords[[length(coords)]][[2]])
-            attributes <- dplyr::relocate(attributes, c("end_longitude", "end_latitude"), .after = "start_latitude")
-          }
           dfa <- dplyr::bind_rows(dfa, attributes)
         }
       }
       # names
-      names(TRACKS) <- c("entityType", "entityId", "projectId", "projectName",
-                         "featureType", "length", "startWhenChar",
-                         "endWhenChar", "agentName")
+      names(TRACKS) <- c(
+        "entityType", "entityId", "projectId", "projectName", "featureType",
+        "length", "startWhenChar", "endWhenChar", "agentName",
+        "start_longitude", "start_latitude", "end_longitude", "end_latitude")
     } else {
       message("No tracks found on this page")
     }
