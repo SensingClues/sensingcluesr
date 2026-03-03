@@ -171,22 +171,16 @@ get_tracks <- function(cookie,
         featureType <- geofeature$featureType
         # length in km
         length <- geofeature$length
-
         # as.POSIXct(strptime(dt1, "%Y-%m-%dT%H:%M:%S"))
         startWhenChar <- geofeature$startWhen
         endWhenChar <- geofeature$endWhen
-
         # agent
         agentName <- geofeature$agent$agentName
-
         # start and end coordinates of the track
-        coords <- geofeature$geometry$coordinates
-        if (is.list(coords)) {
-          start_longitude <- as.double(coords[[1]][[1]])
-          start_latitude <- as.double(coords[[1]][[2]])
-          end_longitude <- as.double(coords[[length(coords)]][[1]])
-          end_latitude <- as.double(coords[[length(coords)]][[2]])
-        }
+        start_longitude <- geofeature$startWhere$coordinates[[1]]
+        start_latitude <- geofeature$startWhere$coordinates[[2]]
+        end_longitude <- geofeature$endWhere$coordinates[[1]]
+        end_latitude <- geofeature$endWhere$coordinates[[2]]
 
         # Increment the progress bar, and update the detail text.
         #progress$inc(1/Ntracks, detail = paste("Doing part", i))
