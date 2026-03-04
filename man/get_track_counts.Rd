@@ -9,6 +9,7 @@ get_track_counts(
   group,
   from = "1900-01-01",
   to = "2999-12-31",
+  hierarchy = NULL,
   url = "https://focus.sensingclues.org/",
   lang = "en"
 )
@@ -21,6 +22,8 @@ get_track_counts(
 \item{from}{Start date.}
 
 \item{to}{End date.}
+
+\item{hierarchy}{A Sensing Clues knowledge graph object, to be retrieved with \code{\link[=get_hierarchy]{get_hierarchy()}}.}
 
 \item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 
