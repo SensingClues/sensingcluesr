@@ -249,6 +249,7 @@ unpack_attributes <- function(id, attributes) {
     key <- attr$key
     val <- attr$value
 
+    if (!identical(key, make.names(key))) next # skip invalid keys
     if (key == "description") next # skip "description" attribute, already exists at a higher level
     if (key == "geometry") { # handle a geometry attribute
       coordinates <- val$coordinates
