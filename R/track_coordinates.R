@@ -101,31 +101,22 @@ get_track_coordinates <- function(cookie,
           text <- paste0("Track ", t, " out of ", total_tracks)
           updateProgress(value = t, detail = text)
         }
-        # debug counter
-        # message(paste0("Track ", i, " out of ", Ntracks))
-        # add timestamp data
-        # first try this one:
-        timestamps <- strsplit(trackDATA$features[[i]]$properties$DateTimes, ",")[[1]]
 
-        # if that doesn't work:
+        # keep the original timestamp strings, use UTC-normalised
+        # POSIXct for deduplication, ordering, and downsampling
+        timestamps <- strsplit(trackDATA$features[[i]]$properties$DateTimes, ",")[[1]]
         if (is.null(timestamps)) {
           coords$time <- NA
-          coords$timeslot <- NA
         } else {
-          coords$time <- timestamps
-          # remove duplicates
-          coords <- coords[!duplicated(coords$time),]
-          # calculate the time difference between subsequent fixes
-          coords$time <- `substr<-`(coords$time, 11, 11, " ")
-          coords$time <- as.POSIXlt(coords$time)
-          coords$dt <- c(as.numeric(coords$time[-nrow(coords)] - coords$time[-1]),0)
-          # order the data so that it increases in time
-          coords <- coords[order(coords$time),]
+          posix_time <- as.POSIXct(timestamps, format = "%Y-%m-%dT%H:%M:%OS%z", tz = "UTC")
+          idx <- which(!duplicated(posix_time))
+          idx <- idx[order(posix_time[idx])]
           if (downsample) {
-            # devide dataset into 5-minute time slots and save only 1 5-minute slot
-            coords$timeslot <- cumsum(coords$dt)%/%(60*5)
-            coords <- coords[!duplicated(coords$timeslot), -4]
+            elapsed <- as.numeric(difftime(posix_time[idx], posix_time[idx[1]], units = "secs"))
+            idx <- idx[!duplicated(elapsed %/% (60 * 5))]
           }
+          coords <- coords[idx, ]
+          coords$time <- timestamps[idx]
         }
 
         # add the track identification, agent and patrol type
