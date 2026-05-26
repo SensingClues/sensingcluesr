@@ -17,23 +17,20 @@
 #' layerId <- df$lid[1]
 #' sf <- get_layer_features(projectId, layerId, cookie)
 get_layer_details <- function(cookie, url = "https://focus.sensingclues.org/") {
-  # get all layers
-  l <- get_all_layers(cookie, url)
-  m <- l$models
-  aoi <- list()
-  # sequence along models
-  for (i in seq_along(m)) {
-    # parse model
-    for (j in seq_along(m[[i]]$layers)) {
-      # find layers in model
-      aoi[[length(aoi)+1]] <- list(m[[i]]$layers[[j]]$name, m[[i]]$layers[[j]]$id, m[[i]]$id, m[[i]]$layers[[j]]$geometryType)
-    }
-  }
-  df <- as.data.frame(do.call(rbind, aoi))
-  names(df) <- c("layerName", "lid", "pid", "geometryType")
-  # drop default and track layers
-  df <- dplyr::filter(df, !df$pid %in% c("track", "default"))
-  return(df)
+  m <- get_all_layers(cookie, url)$models
+  df <- dplyr::bind_rows(lapply(m, function(model) {
+    dplyr::bind_rows(lapply(model$layers, function(layer) {
+      data.frame(
+        layerName    = layer$name,
+        lid          = layer$id,
+        projectName  = model$description,
+        pid          = model$id,
+        geometryType = layer$geometryType,
+        stringsAsFactors = FALSE
+      )
+    }))
+  }))
+  dplyr::filter(df, !pid %in% c("track", "default"))
 }
 
 #' @rdname get_layer_details
