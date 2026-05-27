@@ -24,9 +24,20 @@ get_layer_features(
 \item{layerId}{An integer representing a layer identifier, obtained by \code{\link[=get_layer_details]{get_layer_details()}}.}
 }
 \value{
-A data frame representing the geodata you have access to. There are
-four columns including a name, a data source identifier consisting of two
-parts, a project id and a layer id, and the type of geometry of the layer.
+\code{get_layer_details()} returns a data frame with one row per layer and
+the following columns:
+\itemize{
+\item \code{layerName}: Human-readable name of the layer.
+\item \code{lid}: Layer identifier.
+\item \code{projectName}: Human-readable name of the project the layer belongs to.
+\item \code{pid}: Project identifier.
+\item \code{geometryType}: Geometry type of the layer (e.g. \code{"Point"}, \code{"Polygon"}).
+}
+
+Returns an empty data frame if no map layers are available.
+
+\code{get_layer_features()} returns a simple feature collection (sf) with
+the geometries and attributes of the requested layer.
 }
 \description{
 Access to geodata

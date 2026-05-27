@@ -3,9 +3,15 @@
 #' @param cookie A cookie obtained by [login_cluey()].
 #' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
 #'
-#' @return A data frame representing the geodata you have access to. There are
-#' four columns including a name, a data source identifier consisting of two
-#' parts, a project id and a layer id, and the type of geometry of the layer.
+#' @return `get_layer_details()` returns a data frame with one row per layer and
+#' the following columns:
+#' - `layerName`: Human-readable name of the layer.
+#' - `lid`: Layer identifier.
+#' - `projectName`: Human-readable name of the project the layer belongs to.
+#' - `pid`: Project identifier.
+#' - `geometryType`: Geometry type of the layer (e.g. `"Point"`, `"Polygon"`).
+#'
+#' Returns an empty data frame if no map layers are available.
 #' @export
 #'
 #' @examplesIf !is.null(login_cluey())
@@ -37,6 +43,8 @@ get_layer_details <- function(cookie, url = "https://focus.sensingclues.org/") {
 #' @rdname get_layer_details
 #' @param projectId An integer representing a project identifier, obtained by [get_layer_details()].
 #' @param layerId An integer representing a layer identifier, obtained by [get_layer_details()].
+#' @return `get_layer_features()` returns a simple feature collection (sf) with
+#' the geometries and attributes of the requested layer.
 #' @export
 get_layer_features <- function(projectId, layerId, cookie, url = "https://focus.sensingclues.org/") {
   # /api/map/{searchType}/{projectId}/{layerId}/features
