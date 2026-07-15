@@ -1,4 +1,22 @@
-
+#' Retrieve a heatmap raster
+#'
+#' @param cookie A cookie obtained by [login_cluey()].
+#' @param group One or multiple group identification character string(s), see which groups you have access to with [get_groups()].
+#' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example `list(north=15, east=10, south=-25, west=50)`.
+#' @param from Start date.
+#' @param to End date.
+#' @param aoi Area of interest.
+#' @param concepts One or multiple concept definitions, for example `https://sensingclues.poolparty.biz/SCCSSOntology/631`. See [https://sensingclues.poolparty.biz/GraphViews/](https://sensingclues.poolparty.biz/GraphViews/) for all available concepts.
+#' @param resolution The number of rows and columns of the output raster grid, default is 25.
+#' @param type The type of data to build the heatmap from, either `"observation"` (default) or `"track"`.
+#' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
+#'
+#' @return A `terra` SpatRaster with `resolution` x `resolution` grid cells, where each cell holds the number of results collected by the defined group(s) within the given date range and bounds. Returns `NULL` when no results are found.
+#' @export
+#'
+#' @examplesIf !is.null(login_cluey())
+#' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
+#' r <- get_heatmap(cookie, group = 'focus-project-1234') # demo group
 get_heatmap <- function(cookie,
                         group,
                         bounds = NULL, # list(north = 90, east = 180, south = -89, west = -179)
