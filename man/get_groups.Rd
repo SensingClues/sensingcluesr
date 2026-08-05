@@ -29,6 +29,8 @@ number of observations made in that group.
 Overview of access to data sources
 }
 \examples{
+\dontrun{
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 df <- get_groups(cookie)
+}
 }

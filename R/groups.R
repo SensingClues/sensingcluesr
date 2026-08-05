@@ -11,8 +11,10 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 #' df <- get_groups(cookie)
+#' }
 get_groups <- function(cookie,
                        from = "1900-01-01",
                        to = "2999-12-31",

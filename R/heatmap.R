@@ -14,9 +14,11 @@
 #' @return A `terra` SpatRaster with `resolution` x `resolution` grid cells, where each cell holds the number of results collected by the defined group(s) within the given date range and bounds. Returns `NULL` when no results are found.
 #' @export
 #'
-#' @examplesIf !is.null(login_cluey())
+#' @examples
+#' \dontrun{
 #' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 #' r <- get_heatmap(cookie, group = 'focus-project-1234') # demo group
+#' }
 get_heatmap <- function(cookie,
                         group,
                         bounds = NULL, # list(north = 90, east = 180, south = -89, west = -179)

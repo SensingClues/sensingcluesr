@@ -24,5 +24,7 @@ A cookie object
 Log in to Sensing Clues Cluey
 }
 \examples{
+\dontrun{
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
+}
 }

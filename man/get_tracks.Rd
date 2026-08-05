@@ -66,7 +66,7 @@ A data frame with all tracks collected by the defined group(s), within the given
 Retrieve tracks metadata
 }
 \examples{
-\dontshow{if (!is.null(login_cluey())) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontrun{
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 df <- get_tracks(cookie, group = 'focus-project-1234') # demo group
 
@@ -76,5 +76,5 @@ lst <- get_track(cookie, trackId = id)
 
 # get a single track in JSON format
 json <- get_track_as_geojson(cookie, trackId = id)
-\dontshow{\}) # examplesIf}
+}
 }

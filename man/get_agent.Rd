@@ -27,6 +27,8 @@ A list with agent details, such as the username. Returns \code{NULL} if you do n
 Retrieve agent details
 }
 \examples{
+\dontrun{
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 lst <- get_agent(cookie, agentId = 'YOUR AGENT ID')
+}
 }

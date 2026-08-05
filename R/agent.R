@@ -9,8 +9,10 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 #' lst <- get_agent(cookie, agentId = 'YOUR AGENT ID')
+#' }
 get_agent <- function(cookie, agentId, url = "https://focus.sensingclues.org/", lang = "en") {
   # https://focus.test.sensingclues.org/api/crud/Agent/A0
   url_search_results <- paste0(url, "api/crud/Agent/", agentId, "?language=", lang)

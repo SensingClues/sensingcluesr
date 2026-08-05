@@ -33,6 +33,8 @@ A list of concept definitions and their frequencies collected by the defined gro
 Frequency of concepts
 }
 \examples{
+\dontrun{
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 lst <- get_concept_counts(cookie, group = 'focus-project-1234') # demo group
+}
 }

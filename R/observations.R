@@ -15,9 +15,11 @@
 #' @return A data frame with all observations collected by the defined group(s), within the given date range.
 #' @export
 #'
-#' @examplesIf !is.null(login_cluey())
+#' @examples
+#' \dontrun{
 #' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 #' df <- get_observations(cookie, group = 'focus-project-1234') # demo group
+#' }
 get_observations <- function(cookie,
                              group,
                              bounds = NULL, # list(north = 90, east = 180, south = -89, west = -179)

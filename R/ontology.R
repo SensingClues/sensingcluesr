@@ -7,6 +7,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' lst <- get_hierarchy() # you have to be logged in to https://focus.sensingclues.org/ to get access
 #'
 #' # inspect a single concept
@@ -25,6 +26,7 @@
 #' # get the children ID/label(s) for a given concept ID/label
 #' get_children_id("https://sensingclues.poolparty.biz/SCCSSOntology/106", lst)
 #' get_children_label("Human-wildlife conflict", lst)
+#' }
 get_hierarchy <- function(url = "https://focus.sensingclues.org/", lang = "en") {
   tryCatch({
     url_onto <- paste0(url, "api/ontology/all/hierarchy?language=", lang)

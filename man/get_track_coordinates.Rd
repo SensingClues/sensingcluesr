@@ -51,6 +51,8 @@ A data frame where each row represents a node in a track. All nodes of all track
 Retrieve track coordinate data
 }
 \examples{
+\dontrun{
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 df <- get_track_coordinates(cookie, group = 'focus-project-1234') # demo group
+}
 }

@@ -12,8 +12,10 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 #' df <- get_track_counts(cookie, group = "focus-project-1234") # demo group
+#' }
 get_track_counts <- function(cookie,
                              group,
                              from = "1900-01-01",

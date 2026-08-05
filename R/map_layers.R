@@ -14,7 +14,8 @@
 #' Returns an empty data frame if no map layers are available.
 #' @export
 #'
-#' @examplesIf !is.null(login_cluey())
+#' @examples
+#' \dontrun{
 #' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 #' df <- get_layer_details(cookie)
 #'
@@ -22,6 +23,7 @@
 #' projectId <- df$pid[1]
 #' layerId <- df$lid[1]
 #' sf <- get_layer_features(projectId, layerId, cookie)
+#' }
 get_layer_details <- function(cookie, url = "https://focus.sensingclues.org/") {
   m <- get_all_layers(cookie, url)$models
   df <- dplyr::bind_rows(lapply(m, function(model) {

@@ -43,7 +43,7 @@ the geometries and attributes of the requested layer.
 Access to geodata
 }
 \examples{
-\dontshow{if (!is.null(login_cluey())) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontrun{
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 df <- get_layer_details(cookie)
 
@@ -51,5 +51,5 @@ df <- get_layer_details(cookie)
 projectId <- df$pid[1]
 layerId <- df$lid[1]
 sf <- get_layer_features(projectId, layerId, cookie)
-\dontshow{\}) # examplesIf}
+}
 }

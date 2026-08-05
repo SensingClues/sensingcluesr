@@ -36,6 +36,8 @@ A data frame of track concept definitions and their frequencies collected by the
 Frequency of track concepts
 }
 \examples{
+\dontrun{
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 df <- get_track_counts(cookie, group = "focus-project-1234") # demo group
+}
 }

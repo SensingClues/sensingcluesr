@@ -48,8 +48,8 @@ A data frame with all observations collected by the defined group(s), within the
 Retrieve observation data
 }
 \examples{
-\dontshow{if (!is.null(login_cluey())) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontrun{
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 df <- get_observations(cookie, group = 'focus-project-1234') # demo group
-\dontshow{\}) # examplesIf}
+}
 }

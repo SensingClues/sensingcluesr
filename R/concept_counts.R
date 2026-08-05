@@ -11,8 +11,10 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 #' lst <- get_concept_counts(cookie, group = 'focus-project-1234') # demo group
+#' }
 get_concept_counts <- function(cookie,
                                group,
                                from = "1900-01-01",

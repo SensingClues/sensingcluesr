@@ -45,8 +45,8 @@ A \code{terra} SpatRaster with \code{resolution} x \code{resolution} grid cells,
 Retrieve a heatmap raster
 }
 \examples{
-\dontshow{if (!is.null(login_cluey())) withAutoprint(\{ # examplesIf}
+\dontrun{
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 r <- get_heatmap(cookie, group = 'focus-project-1234') # demo group
-\dontshow{\}) # examplesIf}
+}
 }

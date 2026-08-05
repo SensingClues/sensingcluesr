@@ -17,8 +17,10 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 #' df <- get_track_coordinates(cookie, group = 'focus-project-1234') # demo group
+#' }
 get_track_coordinates <- function(cookie,
                                   group,
                                   bounds = NULL, # list(north = 90, east = 180, south = -89, west = -179)

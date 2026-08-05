@@ -15,7 +15,8 @@
 #' @return A data frame with all tracks collected by the defined group(s), within the given date range.
 #' @export
 #'
-#' @examplesIf !is.null(login_cluey())
+#' @examples
+#' \dontrun{
 #' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 #' df <- get_tracks(cookie, group = 'focus-project-1234') # demo group
 #'
@@ -25,6 +26,7 @@
 #'
 #' # get a single track in JSON format
 #' json <- get_track_as_geojson(cookie, trackId = id)
+#' }
 get_tracks <- function(cookie,
                        group,
                        bounds = NULL, # list(north = 90, east = 180, south = -89, west = -179)
