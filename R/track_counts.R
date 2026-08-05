@@ -54,7 +54,7 @@ get_track_counts <- function(cookie,
       name = sapply(counts, function(x) sensingcluesr::get_label(x$`_value`, h)),
       count = sapply(counts, function(x) x$frequency)
     )
-    track_counts <- dplyr::filter(track_counts, !(id %in% h$topConcepts))
+    track_counts <- dplyr::filter(track_counts, !(.data$id %in% h$topConcepts))
   } else {
     message("No track counts received from backend returning NULL")
     track_counts <- NULL

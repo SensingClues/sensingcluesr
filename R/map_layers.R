@@ -39,7 +39,7 @@ get_layer_details <- function(cookie, url = "https://focus.sensingclues.org/") {
     }))
   }))
   if (nrow(df) == 0) return(df)
-  dplyr::filter(df, !pid %in% c("track", "default"))
+  dplyr::filter(df, !.data$pid %in% c("track", "default"))
 }
 
 #' @rdname get_layer_details

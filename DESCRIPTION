@@ -21,6 +21,7 @@ Imports:
     geojsonsf,
     httr,
     jsonlite,
+    rlang,
     sf,
     terra,
     utils
