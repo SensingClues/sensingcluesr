@@ -23,33 +23,62 @@ get_observations(
 
 \item{group}{One or multiple group identification character string(s), see which groups you have access to with \code{\link[=get_groups]{get_groups()}}.}
 
-\item{bounds}{Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example \code{list(north=15, east=10, south=-25, west=50)}.}
+\item{bounds}{Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example \code{list(north=15, east=10, south=-25, west=50)}. Values outside the range supported by the platform are clamped to it (north 90, east 180, south -89, west -179). Default \code{NULL} places no restriction on the location.}
 
-\item{from}{Start date.}
+\item{from}{Start of the date range, as a \code{Date} or a \code{"YYYY-MM-DD"} character string. Default is 30 days ago.}
 
-\item{to}{End date.}
+\item{to}{End of the date range, as a \code{Date} or a \code{"YYYY-MM-DD"} character string. Default is today.}
 
-\item{aoi}{Area of interest.}
+\item{aoi}{Area of interest: a GeoJSON geometry as a character string, restricting the results to that area. Default \code{""} places no restriction on the area.}
 
-\item{filteredConcepts}{One or multiple concept definitions, for example \verb{https://sensingclues.poolparty.biz/SCCSSOntology/186}. See \url{https://sensingclues.poolparty.biz/GraphViews/} for all available concepts.}
+\item{filteredConcepts}{One or multiple concept definitions, for example \verb{https://sensingclues.poolparty.biz/SCCSSOntology/186}. See \url{https://sensingclues.poolparty.biz/GraphViews/} for all available concepts. Default \code{NULL} returns all concepts.}
 
-\item{updateProgress}{A function to update a progress bar object, default is NULL.}
+\item{updateProgress}{A function to update a progress bar object, default is NULL. It is called once per observation with the arguments \code{value} (the number of observations processed so far) and \code{detail} (a progress message), which makes it suitable for a Shiny progress bar.}
 
-\item{allAttributes}{A boolean. Allows you to collect more attributes for the observations.}
+\item{allAttributes}{A boolean. Allows you to collect more attributes for the observations. If \code{TRUE}, the attributes of each observation are unpacked and joined to the result as extra columns, so which columns you get depends on the attributes present in your data.}
 
 \item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 
 \item{lang}{Language in which the concepts are shown, default is English.}
 }
 \value{
-A data frame with all observations collected by the defined group(s), within the given date range.
+A data frame with all observations collected by the defined group(s),
+within the given date range. There is one row per concept per observation, so
+an observation labelled with three concepts appears as three rows. All
+columns are character columns:
+\itemize{
+\item \code{entityType}, \code{entityId}, \code{entityName}: Type, identifier and name of the
+observation.
+\item \code{projectId}, \code{projectName}: Identifier and name of the project the
+observation belongs to.
+\item \code{observationType}: Type of the observation.
+\item \code{when}: Timestamp of the observation.
+\item \code{where}: Location of the observation, as a JSON string describing the
+geometry.
+\item \code{agentName}: Name of the agent that made the observation.
+\item \code{conceptLabel}, \code{conceptId}: Label and identifier of the concept this row
+describes.
+\item \code{description}: Free-text description, \code{""} if absent.
+}
+
+If \code{allAttributes = TRUE}, extra columns are added for the attributes found in
+the data, including \code{longitude} and \code{latitude}. Returns an empty data frame if
+no observations are found.
 }
 \description{
-Retrieve observation data
+Downloads the observations collected by one or more groups. The results are
+fetched page by page, and progress is reported through messages.
 }
 \examples{
 \dontrun{
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 df <- get_observations(cookie, group = 'focus-project-1234') # demo group
+
+# restrict to a date range and collect all available attributes
+df <- get_observations(cookie,
+                       group = 'focus-project-1234',
+                       from = "2023-01-01",
+                       to = "2023-12-31",
+                       allAttributes = TRUE)
 }
 }

@@ -8,6 +8,74 @@
 \description{
 Functions to retrieve data that you have access to on the Sensing Clues platform. This allows you to inspect your data and perform further analyses. The different data types that are available are observations, tracks, map layers and ontologies.
 }
+\details{
+Every function that returns your own data needs a cookie obtained by
+\code{\link[=login_cluey]{login_cluey()}}, so a typical session starts with a login and a look at the
+groups you have access to:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
+groups <- get_groups(cookie)
+}\if{html}{\out{</div>}}
+
+The identifiers in the \code{value} column of \code{groups} are what the other
+functions expect as their \code{group} argument.
+}
+\section{Observations}{
+
+\itemize{
+\item \code{\link[=get_observations]{get_observations()}} retrieves observations as a data frame.
+\item \code{\link[=get_concept_counts]{get_concept_counts()}} counts how often each concept occurs in
+observations, without downloading the observations themselves.
+}
+}
+
+\section{Tracks}{
+
+\itemize{
+\item \code{\link[=get_tracks]{get_tracks()}} retrieves one row of metadata per track.
+\item \code{\link[=get_track]{get_track()}} and \code{\link[=get_track_as_geojson]{get_track_as_geojson()}} retrieve a single track in
+full detail.
+\item \code{\link[=get_track_coordinates]{get_track_coordinates()}} retrieves the individual coordinates that make
+up the tracks.
+\item \code{\link[=get_track_counts]{get_track_counts()}} counts how often each patrol type occurs.
+}
+}
+
+\section{Maps and geodata}{
+
+\itemize{
+\item \code{\link[=get_layer_details]{get_layer_details()}} lists the map layers you have access to, and
+\code{\link[=get_layer_features]{get_layer_features()}} retrieves one of them as a simple feature
+collection.
+\item \code{\link[=get_heatmap]{get_heatmap()}} aggregates observations or tracks into a raster grid.
+}
+}
+
+\section{Ontologies}{
+
+Observations and tracks refer to concepts in Sensing Clues' ontologies by
+identifier. \code{\link[=get_hierarchy]{get_hierarchy()}} retrieves those ontologies, after which
+\code{\link[=get_id]{get_id()}}, \code{\link[=get_label]{get_label()}}, \code{\link[=get_parent_id]{get_parent_id()}}, \code{\link[=get_parent_label]{get_parent_label()}},
+\code{\link[=get_children_id]{get_children_id()}} and \code{\link[=get_children_label]{get_children_label()}} let you translate between
+identifiers and labels and walk up and down the hierarchy.
+}
+
+\section{Agents}{
+
+\itemize{
+\item \code{\link[=get_agent]{get_agent()}} retrieves the details of a single agent, for example to
+resolve the agent identifiers found in track data.
+}
+}
+
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/SensingClues/sensingcluesr}
+  \item Report bugs at \url{https://github.com/SensingClues/sensingcluesr/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Melanie Arp \email{melanie.arp@sensingclues.org}
 

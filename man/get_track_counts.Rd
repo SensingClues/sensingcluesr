@@ -19,25 +19,43 @@ get_track_counts(
 
 \item{group}{One or multiple group identification character string(s), see which groups you have access to with \code{\link[=get_groups]{get_groups()}}.}
 
-\item{from}{Start date.}
+\item{from}{Start of the date range, as a \code{Date} or a \code{"YYYY-MM-DD"} character string. Default is \code{"1900-01-01"}, so that all tracks are counted.}
 
-\item{to}{End date.}
+\item{to}{End of the date range, as a \code{Date} or a \code{"YYYY-MM-DD"} character string. Default is \code{"2999-12-31"}, so that all tracks are counted.}
 
-\item{hierarchy}{A Sensing Clues knowledge graph object, to be retrieved with \code{\link[=get_hierarchy]{get_hierarchy()}}.}
+\item{hierarchy}{A Sensing Clues knowledge graph object, to be retrieved with \code{\link[=get_hierarchy]{get_hierarchy()}}. Default \code{NULL} retrieves the hierarchy for you; pass one explicitly to avoid downloading it again on repeated calls.}
 
 \item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 
 \item{lang}{Language in which the concepts are shown, default is English.}
 }
 \value{
-A data frame of track concept definitions and their frequencies collected by the defined group(s), within the given date range. See \url{https://sensingclues.poolparty.biz/GraphViews/} for all available concepts.
+A data frame of track concept definitions and their frequencies
+collected by the defined group(s), within the given date range, with one row
+per concept and the following columns:
+\itemize{
+\item \code{id}: Concept identifier. See
+\url{https://sensingclues.poolparty.biz/GraphViews/}
+for all available concepts.
+\item \code{name}: Label of the concept, in the language given by \code{lang}.
+\item \code{count}: Number of tracks labelled with the concept.
+}
+
+Returns \code{NULL} if no track concepts are found.
 }
 \description{
-Frequency of track concepts
+Counts how often each track concept, such as a patrol type, occurs, without
+downloading the tracks themselves. Unlike \code{\link[=get_concept_counts]{get_concept_counts()}}, the concept
+labels are resolved for you, and the ontologies' top concepts are left out of
+the result.
 }
 \examples{
 \dontrun{
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 df <- get_track_counts(cookie, group = "focus-project-1234") # demo group
+
+# re-use the hierarchy when calling the function several times
+lst <- get_hierarchy()
+df <- get_track_counts(cookie, group = "focus-project-1234", hierarchy = lst)
 }
 }

@@ -39,31 +39,63 @@ get_track_as_geojson(
 
 \item{group}{One or multiple group identification character string(s), see which groups you have access to with \code{\link[=get_groups]{get_groups()}}.}
 
-\item{bounds}{Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example \code{list(north=15, east=10, south=-25, west=50)}.}
+\item{bounds}{Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example \code{list(north=15, east=10, south=-25, west=50)}. Values outside the range supported by the platform are clamped to it (north 90, east 180, south -89, west -179). Default \code{NULL} places no restriction on the location.}
 
-\item{from}{Start date.}
+\item{from}{Start of the date range, as a \code{Date} or a \code{"YYYY-MM-DD"} character string. Default is 30 days ago.}
 
-\item{to}{End date.}
+\item{to}{End of the date range, as a \code{Date} or a \code{"YYYY-MM-DD"} character string. Default is today.}
 
-\item{aoi}{Area of interest.}
+\item{aoi}{Area of interest: a GeoJSON geometry as a character string, restricting the results to that area. Default \code{""} places no restriction on the area.}
 
-\item{patrolType}{One or multiple concept definitions, for example \verb{https://sensingclues.poolparty.biz/SCCSSOntology/631}. See \url{https://sensingclues.poolparty.biz/GraphViews/} for all available concepts.}
+\item{patrolType}{One or multiple concept definitions, for example \verb{https://sensingclues.poolparty.biz/SCCSSOntology/631}. See \url{https://sensingclues.poolparty.biz/GraphViews/} for all available concepts. Default \code{NULL} returns all patrol types.}
 
-\item{updateProgress}{A function to update a progress bar object, default is NULL.}
+\item{updateProgress}{A function to update a progress bar object, default is NULL. It is called once per track with the arguments \code{value} (the number of tracks processed so far) and \code{detail} (a progress message), which makes it suitable for a Shiny progress bar.}
 
-\item{allAttributes}{A boolean. Allows you to collect more attributes for the tracks.}
+\item{allAttributes}{A boolean. Allows you to collect more attributes for the tracks. If \code{TRUE}, the attributes of each track are unpacked and joined to the result as extra columns, so which columns you get depends on the attributes present in your data.}
 
 \item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 
 \item{lang}{Language in which the concepts are shown, default is English.}
 
-\item{trackId}{Identification character string of a single track.}
+\item{trackId}{Identification character string of a single track, as found in
+the \code{entityId} column returned by \code{get_tracks()}.}
 }
 \value{
-A data frame with all tracks collected by the defined group(s), within the given date range.
+\code{get_tracks()} returns a data frame with one row per track collected
+by the defined group(s), within the given date range. All columns are
+character columns:
+\itemize{
+\item \code{entityType}, \code{entityId}: Type and identifier of the track. Pass \code{entityId}
+to \code{\link[=get_track]{get_track()}} or \code{\link[=get_track_as_geojson]{get_track_as_geojson()}} for more detail.
+\item \code{projectId}, \code{projectName}: Identifier and name of the project the track
+belongs to.
+\item \code{featureType}: Type of the track, which encodes the patrol type.
+\item \code{length}: Length of the track in kilometres.
+\item \code{startWhenChar}, \code{endWhenChar}: Timestamps of the first and last node of
+the track.
+\item \code{agentName}: Name of the agent that recorded the track.
+\item \code{start_longitude}, \code{start_latitude}, \code{end_longitude}, \code{end_latitude}:
+Coordinates of the first and last node of the track.
+}
+
+If \code{allAttributes = TRUE}, extra columns are added for the attributes found in
+the data. Returns an empty data frame if no tracks are found.
+
+\code{get_track()} returns a nested list with the full record of a single
+track, as stored on the platform. The track itself is in the
+\code{envelope$instance$GeoFeature} element, which also holds the attributes that
+\code{get_tracks(allAttributes = TRUE)} unpacks into columns.
+
+\code{get_track_as_geojson()} returns a single track as a GeoJSON
+\code{FeatureCollection}, of class \code{json} as produced by \code{\link[jsonlite:fromJSON]{jsonlite::toJSON()}}. It
+can be handed to mapping packages directly, or converted to a simple feature
+collection with \code{\link[geojsonsf:geojson_sf]{geojsonsf::geojson_sf()}}.
 }
 \description{
-Retrieve tracks metadata
+\code{get_tracks()} retrieves one row of metadata per track, such as its start and
+end time and its length. Use \code{\link[=get_track_coordinates]{get_track_coordinates()}} if you need the
+individual coordinates that make up the tracks, or \code{\link[=get_track]{get_track()}} and
+\code{\link[=get_track_as_geojson]{get_track_as_geojson()}} for the full detail of a single track.
 }
 \examples{
 \dontrun{

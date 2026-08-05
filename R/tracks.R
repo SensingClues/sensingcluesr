@@ -1,18 +1,39 @@
 #' Retrieve tracks metadata
 #'
+#' `get_tracks()` retrieves one row of metadata per track, such as its start and
+#' end time and its length. Use [get_track_coordinates()] if you need the
+#' individual coordinates that make up the tracks, or [get_track()] and
+#' [get_track_as_geojson()] for the full detail of a single track.
+#'
 #' @param cookie A cookie obtained by [login_cluey()].
 #' @param group One or multiple group identification character string(s), see which groups you have access to with [get_groups()].
-#' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example `list(north=15, east=10, south=-25, west=50)`.
-#' @param from Start date.
-#' @param to End date.
-#' @param aoi Area of interest.
-#' @param patrolType One or multiple concept definitions, for example `https://sensingclues.poolparty.biz/SCCSSOntology/631`. See [https://sensingclues.poolparty.biz/GraphViews/](https://sensingclues.poolparty.biz/GraphViews/) for all available concepts.
-#' @param updateProgress A function to update a progress bar object, default is NULL.
-#' @param allAttributes A boolean. Allows you to collect more attributes for the tracks.
+#' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example `list(north=15, east=10, south=-25, west=50)`. Values outside the range supported by the platform are clamped to it (north 90, east 180, south -89, west -179). Default `NULL` places no restriction on the location.
+#' @param from Start of the date range, as a `Date` or a `"YYYY-MM-DD"` character string. Default is 30 days ago.
+#' @param to End of the date range, as a `Date` or a `"YYYY-MM-DD"` character string. Default is today.
+#' @param aoi Area of interest: a GeoJSON geometry as a character string, restricting the results to that area. Default `""` places no restriction on the area.
+#' @param patrolType One or multiple concept definitions, for example `https://sensingclues.poolparty.biz/SCCSSOntology/631`. See [https://sensingclues.poolparty.biz/GraphViews/](https://sensingclues.poolparty.biz/GraphViews/) for all available concepts. Default `NULL` returns all patrol types.
+#' @param updateProgress A function to update a progress bar object, default is NULL. It is called once per track with the arguments `value` (the number of tracks processed so far) and `detail` (a progress message), which makes it suitable for a Shiny progress bar.
+#' @param allAttributes A boolean. Allows you to collect more attributes for the tracks. If `TRUE`, the attributes of each track are unpacked and joined to the result as extra columns, so which columns you get depends on the attributes present in your data.
 #' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
 #' @param lang Language in which the concepts are shown, default is English.
 #'
-#' @return A data frame with all tracks collected by the defined group(s), within the given date range.
+#' @return `get_tracks()` returns a data frame with one row per track collected
+#' by the defined group(s), within the given date range. All columns are
+#' character columns:
+#' - `entityType`, `entityId`: Type and identifier of the track. Pass `entityId`
+#'   to [get_track()] or [get_track_as_geojson()] for more detail.
+#' - `projectId`, `projectName`: Identifier and name of the project the track
+#'   belongs to.
+#' - `featureType`: Type of the track, which encodes the patrol type.
+#' - `length`: Length of the track in kilometres.
+#' - `startWhenChar`, `endWhenChar`: Timestamps of the first and last node of
+#'   the track.
+#' - `agentName`: Name of the agent that recorded the track.
+#' - `start_longitude`, `start_latitude`, `end_longitude`, `end_latitude`:
+#'   Coordinates of the first and last node of the track.
+#'
+#' If `allAttributes = TRUE`, extra columns are added for the attributes found in
+#' the data. Returns an empty data frame if no tracks are found.
 #' @export
 #'
 #' @examples
@@ -231,7 +252,12 @@ get_tracks <- function(cookie,
 }
 
 #' @rdname get_tracks
-#' @param trackId Identification character string of a single track.
+#' @param trackId Identification character string of a single track, as found in
+#' the `entityId` column returned by `get_tracks()`.
+#' @return `get_track()` returns a nested list with the full record of a single
+#' track, as stored on the platform. The track itself is in the
+#' `envelope$instance$GeoFeature` element, which also holds the attributes that
+#' `get_tracks(allAttributes = TRUE)` unpacks into columns.
 #' @export
 get_track <- function(cookie, trackId, url = "https://focus.sensingclues.org/", lang = "en") {
   # https://focus.sensingclues.org/api/crud/GeoFeature/G3588368-69d14fa1-64d9-40fd-a11a-1112ecca1e95?language=en
@@ -242,6 +268,10 @@ get_track <- function(cookie, trackId, url = "https://focus.sensingclues.org/", 
 }
 
 #' @rdname get_tracks
+#' @return `get_track_as_geojson()` returns a single track as a GeoJSON
+#' `FeatureCollection`, of class `json` as produced by [jsonlite::toJSON()]. It
+#' can be handed to mapping packages directly, or converted to a simple feature
+#' collection with [geojsonsf::geojson_sf()].
 #' @export
 get_track_as_geojson <- function(cookie, trackId, url = "https://focus.sensingclues.org/", lang = "en") {
   message(paste0("Start fetching track ", trackId, " as geojson"))

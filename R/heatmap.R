@@ -1,23 +1,42 @@
 #' Retrieve a heatmap raster
 #'
+#' Counts observations or tracks per grid cell and returns the result as a
+#' raster, which is a fast way to see where activity is concentrated without
+#' downloading the individual records. The counting is done by the platform, so
+#' the size of the download depends on `resolution` rather than on the number of
+#' results.
+#'
+#' The extent of the returned raster is the extent of the results, which is not
+#' necessarily the extent of `bounds`.
+#'
 #' @param cookie A cookie obtained by [login_cluey()].
 #' @param group One or multiple group identification character string(s), see which groups you have access to with [get_groups()].
-#' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example `list(north=15, east=10, south=-25, west=50)`.
-#' @param from Start date.
-#' @param to End date.
-#' @param aoi Area of interest.
-#' @param concepts One or multiple concept definitions, for example `https://sensingclues.poolparty.biz/SCCSSOntology/631`. See [https://sensingclues.poolparty.biz/GraphViews/](https://sensingclues.poolparty.biz/GraphViews/) for all available concepts.
-#' @param resolution The number of rows and columns of the output raster grid, default is 25.
+#' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example `list(north=15, east=10, south=-25, west=50)`. Values outside the range supported by the platform are clamped to it (north 90, east 180, south -89, west -179). Default `NULL` places no restriction on the location.
+#' @param from Start of the date range, as a `Date` or a `"YYYY-MM-DD"` character string. Default is 30 days ago.
+#' @param to End of the date range, as a `Date` or a `"YYYY-MM-DD"` character string. Default is today.
+#' @param aoi Area of interest: a GeoJSON geometry as a character string, restricting the results to that area. Default `""` places no restriction on the area.
+#' @param concepts One or multiple concept definitions, for example `https://sensingclues.poolparty.biz/SCCSSOntology/631`. See [https://sensingclues.poolparty.biz/GraphViews/](https://sensingclues.poolparty.biz/GraphViews/) for all available concepts. Default `NULL` counts all concepts.
+#' @param resolution The number of rows and columns of the output raster grid, default is 25. A higher value gives a finer grid at the cost of a larger download.
 #' @param type The type of data to build the heatmap from, either `"observation"` (default) or `"track"`.
 #' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
 #'
-#' @return A `terra` SpatRaster with `resolution` x `resolution` grid cells, where each cell holds the number of results collected by the defined group(s) within the given date range and bounds. Returns `NULL` when no results are found.
+#' @return A `terra` SpatRaster with `resolution` x `resolution` grid cells in
+#' `EPSG:4326`, where each cell holds the number of results collected by the
+#' defined group(s) within the given date range and bounds. Cells without results
+#' are `NA`. Returns `NULL` when no results are found.
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 #' r <- get_heatmap(cookie, group = 'focus-project-1234') # demo group
+#' terra::plot(r)
+#'
+#' # a finer grid of the tracks instead of the observations
+#' r <- get_heatmap(cookie,
+#'                  group = 'focus-project-1234',
+#'                  type = "track",
+#'                  resolution = 100)
 #' }
 get_heatmap <- function(cookie,
                         group,

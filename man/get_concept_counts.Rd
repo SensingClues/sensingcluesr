@@ -18,23 +18,39 @@ get_concept_counts(
 
 \item{group}{One or multiple group identification character string(s), see which groups you have access to with \code{\link[=get_groups]{get_groups()}}.}
 
-\item{from}{Start date.}
+\item{from}{Start of the date range, as a \code{Date} or a \code{"YYYY-MM-DD"} character string. Default is \code{"1900-01-01"}, so that all observations are counted.}
 
-\item{to}{End date.}
+\item{to}{End of the date range, as a \code{Date} or a \code{"YYYY-MM-DD"} character string. Default is \code{"2999-12-31"}, so that all observations are counted.}
 
 \item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 
 \item{lang}{Language in which the concepts are shown, default is English.}
 }
 \value{
-A list of concept definitions and their frequencies collected by the defined group(s), within the given date range. See \url{https://sensingclues.poolparty.biz/GraphViews/} for all available concepts.
+A list of concept definitions and their frequencies collected by the
+defined group(s), within the given date range. Each element is a list with a
+\verb{_value} element holding the concept identifier and a \code{frequency} element
+holding the number of observations labelled with that concept. See
+\url{https://sensingclues.poolparty.biz/GraphViews/}
+for all available concepts, or use \code{\link[=get_label]{get_label()}} to resolve the identifiers to
+readable labels.
 }
 \description{
-Frequency of concepts
+Counts how often each concept occurs in the observations of one or more
+groups, without downloading the observations themselves. See
+\code{\link[=get_track_counts]{get_track_counts()}} for the same information on tracks.
 }
 \examples{
 \dontrun{
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 lst <- get_concept_counts(cookie, group = 'focus-project-1234') # demo group
+
+# turn the result into a data frame with readable concept labels
+hierarchy <- get_hierarchy()
+df <- data.frame(
+  id = sapply(lst, function(x) x$`_value`),
+  name = sapply(lst, function(x) get_label(x$`_value`, hierarchy)),
+  count = sapply(lst, function(x) x$frequency)
+)
 }
 }

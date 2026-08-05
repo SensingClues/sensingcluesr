@@ -1,5 +1,11 @@
 #' Access to geodata
 #'
+#' `get_layer_details()` lists the map layers you have access to, such as the
+#' boundaries of a protected area. `get_layer_features()` then retrieves one of
+#' those layers as a simple feature collection that you can plot or intersect
+#' with your observations. Layers belonging to the internal `track` and `default`
+#' projects are left out of the overview.
+#'
 #' @param cookie A cookie obtained by [login_cluey()].
 #' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
 #'
@@ -43,10 +49,11 @@ get_layer_details <- function(cookie, url = "https://focus.sensingclues.org/") {
 }
 
 #' @rdname get_layer_details
-#' @param projectId An integer representing a project identifier, obtained by [get_layer_details()].
-#' @param layerId An integer representing a layer identifier, obtained by [get_layer_details()].
+#' @param projectId An integer representing a project identifier, obtained by [get_layer_details()]. Found in the `pid` column of `get_layer_details()`.
+#' @param layerId An integer representing a layer identifier, obtained by [get_layer_details()]. Found in the `lid` column of `get_layer_details()`.
 #' @return `get_layer_features()` returns a simple feature collection (sf) with
-#' the geometries and attributes of the requested layer.
+#' the geometries and attributes of the requested layer. The geometry type
+#' matches the `geometryType` reported by `get_layer_details()`.
 #' @export
 get_layer_features <- function(projectId, layerId, cookie, url = "https://focus.sensingclues.org/") {
   # /api/map/{searchType}/{projectId}/{layerId}/features

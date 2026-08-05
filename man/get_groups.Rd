@@ -14,19 +14,29 @@ get_groups(
 \arguments{
 \item{cookie}{A cookie obtained by \code{\link[=login_cluey]{login_cluey()}}.}
 
-\item{from}{Start date.}
+\item{from}{Start of the date range, as a \code{Date} or a \code{"YYYY-MM-DD"} character string. Default is \code{"1900-01-01"}, so that all data is counted.}
 
-\item{to}{End date.}
+\item{to}{End of the date range, as a \code{Date} or a \code{"YYYY-MM-DD"} character string. Default is \code{"2999-12-31"}, so that all data is counted.}
 
 \item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 }
 \value{
-A data frame representing the data sources you have access to.
-There are three columns including a data source identifier, a name and the
-number of observations made in that group.
+A data frame with one row per group you have access to and the
+following character columns:
+\itemize{
+\item \code{name}: Human-readable name of the group.
+\item \code{count}: Number of observations and tracks in the group within the given
+date range.
+\item \code{value}: Group identifier, to be used as the \code{group} argument of, for
+example, \code{\link[=get_observations]{get_observations()}} and \code{\link[=get_tracks]{get_tracks()}}.
+}
+
+Returns an empty data frame if you do not have access to any group.
 }
 \description{
-Overview of access to data sources
+Lists the groups (data sources) that your account has access to. Use this to
+find the group identifiers that the other functions in this package expect as
+their \code{group} argument.
 }
 \examples{
 \dontrun{

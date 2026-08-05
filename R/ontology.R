@@ -1,9 +1,30 @@
 #' Querying Sensing Clues' ontologies
 #'
+#' Observations and tracks refer to concepts in Sensing Clues' ontologies by
+#' identifier, for example
+#' `https://sensingclues.poolparty.biz/SCCSSOntology/106`. `get_hierarchy()`
+#' retrieves those ontologies, and the other functions documented here translate
+#' between identifiers and labels and walk up and down the hierarchy.
+#'
+#' Retrieving the hierarchy is a download, so retrieve it once and pass the same
+#' object to the lookup functions rather than calling `get_hierarchy()`
+#' repeatedly.
+#'
+#' All lookup functions warn and return `NULL` when the concept is not found in
+#' the hierarchy, so they are safe to call on unknown identifiers or labels.
+#'
 #' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
 #' @param lang Language in which the concepts are shown, default is English.
+#' @param hierarchy Object retrieved by [get_hierarchy()].
 #'
-#' @return Nested list representing multiple ontologies.
+#' @return `get_hierarchy()` returns a nested list representing multiple
+#' ontologies, with two elements of interest:
+#' - `concepts`: One element per concept, each a list with an `id`, one or more
+#'   `label`s, the `parent` concept identifier and the `child` concept
+#'   identifier(s).
+#' - `topConcepts`: The identifiers of the concepts at the root of each ontology.
+#'
+#' Returns `NULL` with a warning if the ontologies cannot be retrieved.
 #' @export
 #'
 #' @examples
@@ -26,6 +47,9 @@
 #' # get the children ID/label(s) for a given concept ID/label
 #' get_children_id("https://sensingclues.poolparty.biz/SCCSSOntology/106", lst)
 #' get_children_label("Human-wildlife conflict", lst)
+#'
+#' # retrieve the ontologies in another language
+#' lst_nl <- get_hierarchy(lang = "nl")
 #' }
 get_hierarchy <- function(url = "https://focus.sensingclues.org/", lang = "en") {
   tryCatch({
@@ -43,8 +67,9 @@ get_hierarchy <- function(url = "https://focus.sensingclues.org/", lang = "en") 
 }
 
 #' @rdname get_hierarchy
-#' @param label Textual concept definiton, for example `Human-wildlife conflict`.
-#' @param hierarchy Object retrieved by [get_hierarchy()].
+#' @param label Textual concept definition, for example `Human-wildlife conflict`.
+#' @return `get_id()` returns the identifier of the concept with the given
+#' `label`, as a character string.
 #' @export
 get_id <- function(label, hierarchy) {
   # Try to extract the concept ID
@@ -58,7 +83,8 @@ get_id <- function(label, hierarchy) {
 
 #' @rdname get_hierarchy
 #' @param id Concept identification, for example `https://sensingclues.poolparty.biz/SCCSSOntology/106`.
-#' @param hierarchy Object retrieved by [get_hierarchy()].
+#' @return `get_label()` returns the label of the concept with the given `id`, in
+#' the language the hierarchy was retrieved in.
 #' @export
 get_label <- function(id, hierarchy) {
   # Try to extract the concept label
@@ -71,6 +97,8 @@ get_label <- function(id, hierarchy) {
 }
 
 #' @rdname get_hierarchy
+#' @return `get_parent_id()` returns the identifier of the parent of the concept
+#' with the given `id`.
 #' @export
 get_parent_id <- function(id, hierarchy) {
   # Try to extract the parent concept ID
@@ -83,6 +111,8 @@ get_parent_id <- function(id, hierarchy) {
 }
 
 #' @rdname get_hierarchy
+#' @return `get_parent_label()` returns the label of the parent of the concept
+#' with the given `label`.
 #' @export
 get_parent_label <- function(label, hierarchy) {
   # Try to extract the parent concept label
@@ -96,6 +126,9 @@ get_parent_label <- function(label, hierarchy) {
 }
 
 #' @rdname get_hierarchy
+#' @return `get_children_id()` returns a character vector with the identifiers of
+#' the direct children of the concept with the given `id`, or `NULL` if the
+#' concept has no children.
 #' @export
 get_children_id <- function(id, hierarchy) {
   # Try to extract the children concept ID(s)
@@ -108,6 +141,9 @@ get_children_id <- function(id, hierarchy) {
 }
 
 #' @rdname get_hierarchy
+#' @return `get_children_label()` returns a character vector with the labels of
+#' the direct children of the concept with the given `label`, or `NULL` if the
+#' concept has no children.
 #' @export
 get_children_label <- function(label, hierarchy) {
   # Try to extract the children concept label(s)

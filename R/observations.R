@@ -1,24 +1,53 @@
 #' Retrieve observation data
 #'
+#' Downloads the observations collected by one or more groups. The results are
+#' fetched page by page, and progress is reported through messages.
+#'
 #' @param cookie A cookie obtained by [login_cluey()].
 #' @param group One or multiple group identification character string(s), see which groups you have access to with [get_groups()].
-#' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example `list(north=15, east=10, south=-25, west=50)`.
-#' @param from Start date.
-#' @param to End date.
-#' @param aoi Area of interest.
-#' @param filteredConcepts One or multiple concept definitions, for example `https://sensingclues.poolparty.biz/SCCSSOntology/186`. See [https://sensingclues.poolparty.biz/GraphViews/](https://sensingclues.poolparty.biz/GraphViews/) for all available concepts.
-#' @param updateProgress A function to update a progress bar object, default is NULL.
-#' @param allAttributes A boolean. Allows you to collect more attributes for the observations.
+#' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example `list(north=15, east=10, south=-25, west=50)`. Values outside the range supported by the platform are clamped to it (north 90, east 180, south -89, west -179). Default `NULL` places no restriction on the location.
+#' @param from Start of the date range, as a `Date` or a `"YYYY-MM-DD"` character string. Default is 30 days ago.
+#' @param to End of the date range, as a `Date` or a `"YYYY-MM-DD"` character string. Default is today.
+#' @param aoi Area of interest: a GeoJSON geometry as a character string, restricting the results to that area. Default `""` places no restriction on the area.
+#' @param filteredConcepts One or multiple concept definitions, for example `https://sensingclues.poolparty.biz/SCCSSOntology/186`. See [https://sensingclues.poolparty.biz/GraphViews/](https://sensingclues.poolparty.biz/GraphViews/) for all available concepts. Default `NULL` returns all concepts.
+#' @param updateProgress A function to update a progress bar object, default is NULL. It is called once per observation with the arguments `value` (the number of observations processed so far) and `detail` (a progress message), which makes it suitable for a Shiny progress bar.
+#' @param allAttributes A boolean. Allows you to collect more attributes for the observations. If `TRUE`, the attributes of each observation are unpacked and joined to the result as extra columns, so which columns you get depends on the attributes present in your data.
 #' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
 #' @param lang Language in which the concepts are shown, default is English.
 #'
-#' @return A data frame with all observations collected by the defined group(s), within the given date range.
+#' @return A data frame with all observations collected by the defined group(s),
+#' within the given date range. There is one row per concept per observation, so
+#' an observation labelled with three concepts appears as three rows. All
+#' columns are character columns:
+#' - `entityType`, `entityId`, `entityName`: Type, identifier and name of the
+#'   observation.
+#' - `projectId`, `projectName`: Identifier and name of the project the
+#'   observation belongs to.
+#' - `observationType`: Type of the observation.
+#' - `when`: Timestamp of the observation.
+#' - `where`: Location of the observation, as a JSON string describing the
+#'   geometry.
+#' - `agentName`: Name of the agent that made the observation.
+#' - `conceptLabel`, `conceptId`: Label and identifier of the concept this row
+#'   describes.
+#' - `description`: Free-text description, `""` if absent.
+#'
+#' If `allAttributes = TRUE`, extra columns are added for the attributes found in
+#' the data, including `longitude` and `latitude`. Returns an empty data frame if
+#' no observations are found.
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 #' df <- get_observations(cookie, group = 'focus-project-1234') # demo group
+#'
+#' # restrict to a date range and collect all available attributes
+#' df <- get_observations(cookie,
+#'                        group = 'focus-project-1234',
+#'                        from = "2023-01-01",
+#'                        to = "2023-12-31",
+#'                        allAttributes = TRUE)
 #' }
 get_observations <- function(cookie,
                              group,

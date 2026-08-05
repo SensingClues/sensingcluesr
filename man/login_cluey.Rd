@@ -18,11 +18,26 @@ login_cluey(
 \item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 }
 \value{
-A cookie object
+A cookie object: a one-row data frame as returned by
+\code{\link[httr:cookies]{httr::cookies()}}, to be passed on as the \code{cookie} argument of the other
+functions in this package. Returns \code{NULL} with a warning if the login fails,
+for example because the credentials are incorrect.
 }
 \description{
-Log in to Sensing Clues Cluey
+Sets up an authenticated session with the Sensing Clues platform. The cookie
+that is returned identifies your session and is the first argument of every
+function in this package that retrieves your data.
 }
+\section{Keeping your credentials out of your scripts}{
+
+Rather than typing your password into a script, store it in your user
+environment file with \code{usethis::edit_r_environ()} and read it back with
+\code{\link[=Sys.getenv]{Sys.getenv()}}:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{cookie <- login_cluey(Sys.getenv("CLUEY_USER"), Sys.getenv("CLUEY_PASSWORD"))
+}\if{html}{\out{</div>}}
+}
+
 \examples{
 \dontrun{
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")

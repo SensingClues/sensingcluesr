@@ -1,25 +1,51 @@
 #' Retrieve track coordinate data
 #'
+#' Downloads the individual coordinates (nodes) that make up the tracks, which is
+#' what you need to plot the tracks on a map. Use [get_tracks()] instead if one
+#' row of metadata per track is enough.
+#'
+#' Duplicate timestamps within a track are dropped and the remaining nodes are
+#' ordered by time. By default the nodes are also downsampled to at most one
+#' node per five minutes, which keeps long tracks manageable; set
+#' `downsample = FALSE` to get every node.
+#'
 #' @param cookie A cookie obtained by [login_cluey()].
 #' @param group One or multiple group identification character string(s), see which groups you have access to with [get_groups()].
-#' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example `list(north=15, east=10, south=-25, west=50)`.
-#' @param from Start date.
-#' @param to End date.
-#' @param aoi Area of interest.
-#' @param concepts One or multiple concept definitions, for example `https://sensingclues.poolparty.biz/SCCSSOntology/631`. See [https://sensingclues.poolparty.biz/GraphViews/](https://sensingclues.poolparty.biz/GraphViews/) for all available concepts.
-#' @param updateProgress A function to update a progress bar object, default is NULL.
-#' @param total_tracks The number of tracks to retrieve per page of the query.
-#' @param downsample A boolean. Allows you to downsample the traces per track.
+#' @param bounds Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example `list(north=15, east=10, south=-25, west=50)`. Values outside the range supported by the platform are clamped to it (north 90, east 180, south -89, west -179). Default `NULL` places no restriction on the location.
+#' @param from Start of the date range, as a `Date` or a `"YYYY-MM-DD"` character string. Default is 30 days ago.
+#' @param to End of the date range, as a `Date` or a `"YYYY-MM-DD"` character string. Default is today.
+#' @param aoi Area of interest: a GeoJSON geometry as a character string, restricting the results to that area. Default `""` places no restriction on the area.
+#' @param concepts One or multiple concept definitions, for example `https://sensingclues.poolparty.biz/SCCSSOntology/631`. See [https://sensingclues.poolparty.biz/GraphViews/](https://sensingclues.poolparty.biz/GraphViews/) for all available concepts. Default `NULL` returns all concepts.
+#' @param updateProgress A function to update a progress bar object, default is NULL. It is called once per track with the arguments `value` (the number of tracks processed so far) and `detail` (a progress message), which makes it suitable for a Shiny progress bar.
+#' @param total_tracks The number of tracks to retrieve per page of the query. Only used in the progress messages passed to `updateProgress`, not to limit the results.
+#' @param downsample A boolean. Allows you to downsample the traces per track. If `TRUE` (the default), at most one node per five minutes is kept per track.
 #' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
 #' @param lang Language in which the concepts are shown, default is English.
 #'
-#' @return A data frame where each row represents a node in a track. All nodes of all tracks collected by the defined group(s), within the given date range, are returned in the same data frame.
+#' @return A data frame where each row represents a node in a track. All nodes of
+#' all tracks collected by the defined group(s), within the given date range, are
+#' returned in the same data frame, with the following columns:
+#' - `lon`, `lat`: Coordinates of the node, as numbers.
+#' - `time`: Timestamp of the node, as the character string returned by the
+#'   platform, or `NA` if the track carries no timestamps.
+#' - `trackId`: Identifier of the track the node belongs to, matching the
+#'   `entityId` column of [get_tracks()]. Group by this column to draw one line
+#'   per track.
+#' - `agent`: Reference to the agent that recorded the track.
+#' - `patrolType`: Patrol type of the track.
+#'
+#' Returns `NULL` if no tracks are found.
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 #' df <- get_track_coordinates(cookie, group = 'focus-project-1234') # demo group
+#'
+#' # keep every node instead of one node per five minutes
+#' df <- get_track_coordinates(cookie,
+#'                             group = 'focus-project-1234',
+#'                             downsample = FALSE)
 #' }
 get_track_coordinates <- function(cookie,
                                   group,

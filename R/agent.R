@@ -1,11 +1,20 @@
 #' Retrieve agent details
 #'
+#' Looks up the details of a single agent, for example to put a name to the agent
+#' identifiers found in track data.
+#'
 #' @param cookie A cookie obtained by [login_cluey()].
 #' @param agentId Identification character string of a single agent. You can find the agent id of your group members in [Focus](https://focus.sensingclues.org/).
 #' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
 #' @param lang Language in which the concepts are shown, default is English.
 #'
-#' @return A list with agent details, such as the username. Returns `NULL` if you do not have access to the agent or if the `agentId` is incorrect.
+#' @return A list with three elements:
+#' - `agentId`: Identifier of the agent.
+#' - `agentName`: Name of the agent, such as the username.
+#' - `description`: Free-text description of the agent.
+#'
+#' Returns `NULL` with a warning if you do not have access to the agent or if the
+#' `agentId` is incorrect.
 #' @export
 #'
 #' @examples

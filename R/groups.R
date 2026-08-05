@@ -1,13 +1,23 @@
 #' Overview of access to data sources
 #'
+#' Lists the groups (data sources) that your account has access to. Use this to
+#' find the group identifiers that the other functions in this package expect as
+#' their `group` argument.
+#'
 #' @param cookie A cookie obtained by [login_cluey()].
-#' @param from Start date.
-#' @param to End date.
+#' @param from Start of the date range, as a `Date` or a `"YYYY-MM-DD"` character string. Default is `"1900-01-01"`, so that all data is counted.
+#' @param to End of the date range, as a `Date` or a `"YYYY-MM-DD"` character string. Default is `"2999-12-31"`, so that all data is counted.
 #' @param url A Sensing Clues URL, default is [https://focus.sensingclues.org/](https://focus.sensingclues.org/).
 #'
-#' @return A data frame representing the data sources you have access to.
-#' There are three columns including a data source identifier, a name and the
-#' number of observations made in that group.
+#' @return A data frame with one row per group you have access to and the
+#' following character columns:
+#' - `name`: Human-readable name of the group.
+#' - `count`: Number of observations and tracks in the group within the given
+#'   date range.
+#' - `value`: Group identifier, to be used as the `group` argument of, for
+#'   example, [get_observations()] and [get_tracks()].
+#'
+#' Returns an empty data frame if you do not have access to any group.
 #' @export
 #'
 #' @examples

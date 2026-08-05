@@ -12,6 +12,8 @@ Description: Functions to retrieve data that you have access to on the Sensing
     analyses. The different data types that are available are observations, 
     tracks, map layers and ontologies.
 License: AGPL (>= 3) + file LICENSE
+URL: https://github.com/SensingClues/sensingcluesr
+BugReports: https://github.com/SensingClues/sensingcluesr/issues
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

@@ -21,10 +21,19 @@ get_agent(
 \item{lang}{Language in which the concepts are shown, default is English.}
 }
 \value{
-A list with agent details, such as the username. Returns \code{NULL} if you do not have access to the agent or if the \code{agentId} is incorrect.
+A list with three elements:
+\itemize{
+\item \code{agentId}: Identifier of the agent.
+\item \code{agentName}: Name of the agent, such as the username.
+\item \code{description}: Free-text description of the agent.
+}
+
+Returns \code{NULL} with a warning if you do not have access to the agent or if the
+\code{agentId} is incorrect.
 }
 \description{
-Retrieve agent details
+Looks up the details of a single agent, for example to put a name to the agent
+identifiers found in track data.
 }
 \examples{
 \dontrun{

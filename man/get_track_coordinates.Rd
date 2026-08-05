@@ -24,35 +24,62 @@ get_track_coordinates(
 
 \item{group}{One or multiple group identification character string(s), see which groups you have access to with \code{\link[=get_groups]{get_groups()}}.}
 
-\item{bounds}{Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example \code{list(north=15, east=10, south=-25, west=50)}.}
+\item{bounds}{Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example \code{list(north=15, east=10, south=-25, west=50)}. Values outside the range supported by the platform are clamped to it (north 90, east 180, south -89, west -179). Default \code{NULL} places no restriction on the location.}
 
-\item{from}{Start date.}
+\item{from}{Start of the date range, as a \code{Date} or a \code{"YYYY-MM-DD"} character string. Default is 30 days ago.}
 
-\item{to}{End date.}
+\item{to}{End of the date range, as a \code{Date} or a \code{"YYYY-MM-DD"} character string. Default is today.}
 
-\item{aoi}{Area of interest.}
+\item{aoi}{Area of interest: a GeoJSON geometry as a character string, restricting the results to that area. Default \code{""} places no restriction on the area.}
 
-\item{concepts}{One or multiple concept definitions, for example \verb{https://sensingclues.poolparty.biz/SCCSSOntology/631}. See \url{https://sensingclues.poolparty.biz/GraphViews/} for all available concepts.}
+\item{concepts}{One or multiple concept definitions, for example \verb{https://sensingclues.poolparty.biz/SCCSSOntology/631}. See \url{https://sensingclues.poolparty.biz/GraphViews/} for all available concepts. Default \code{NULL} returns all concepts.}
 
-\item{updateProgress}{A function to update a progress bar object, default is NULL.}
+\item{updateProgress}{A function to update a progress bar object, default is NULL. It is called once per track with the arguments \code{value} (the number of tracks processed so far) and \code{detail} (a progress message), which makes it suitable for a Shiny progress bar.}
 
-\item{total_tracks}{The number of tracks to retrieve per page of the query.}
+\item{total_tracks}{The number of tracks to retrieve per page of the query. Only used in the progress messages passed to \code{updateProgress}, not to limit the results.}
 
-\item{downsample}{A boolean. Allows you to downsample the traces per track.}
+\item{downsample}{A boolean. Allows you to downsample the traces per track. If \code{TRUE} (the default), at most one node per five minutes is kept per track.}
 
 \item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 
 \item{lang}{Language in which the concepts are shown, default is English.}
 }
 \value{
-A data frame where each row represents a node in a track. All nodes of all tracks collected by the defined group(s), within the given date range, are returned in the same data frame.
+A data frame where each row represents a node in a track. All nodes of
+all tracks collected by the defined group(s), within the given date range, are
+returned in the same data frame, with the following columns:
+\itemize{
+\item \code{lon}, \code{lat}: Coordinates of the node, as numbers.
+\item \code{time}: Timestamp of the node, as the character string returned by the
+platform, or \code{NA} if the track carries no timestamps.
+\item \code{trackId}: Identifier of the track the node belongs to, matching the
+\code{entityId} column of \code{\link[=get_tracks]{get_tracks()}}. Group by this column to draw one line
+per track.
+\item \code{agent}: Reference to the agent that recorded the track.
+\item \code{patrolType}: Patrol type of the track.
+}
+
+Returns \code{NULL} if no tracks are found.
 }
 \description{
-Retrieve track coordinate data
+Downloads the individual coordinates (nodes) that make up the tracks, which is
+what you need to plot the tracks on a map. Use \code{\link[=get_tracks]{get_tracks()}} instead if one
+row of metadata per track is enough.
+}
+\details{
+Duplicate timestamps within a track are dropped and the remaining nodes are
+ordered by time. By default the nodes are also downsampled to at most one
+node per five minutes, which keeps long tracks manageable; set
+\code{downsample = FALSE} to get every node.
 }
 \examples{
 \dontrun{
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 df <- get_track_coordinates(cookie, group = 'focus-project-1234') # demo group
+
+# keep every node instead of one node per five minutes
+df <- get_track_coordinates(cookie,
+                            group = 'focus-project-1234',
+                            downsample = FALSE)
 }
 }

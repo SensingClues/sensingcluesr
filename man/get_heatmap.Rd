@@ -22,31 +22,49 @@ get_heatmap(
 
 \item{group}{One or multiple group identification character string(s), see which groups you have access to with \code{\link[=get_groups]{get_groups()}}.}
 
-\item{bounds}{Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example \code{list(north=15, east=10, south=-25, west=50)}.}
+\item{bounds}{Bounding box coordinates (latitude and longitude) in list(north, east, south, west) format. For example \code{list(north=15, east=10, south=-25, west=50)}. Values outside the range supported by the platform are clamped to it (north 90, east 180, south -89, west -179). Default \code{NULL} places no restriction on the location.}
 
-\item{from}{Start date.}
+\item{from}{Start of the date range, as a \code{Date} or a \code{"YYYY-MM-DD"} character string. Default is 30 days ago.}
 
-\item{to}{End date.}
+\item{to}{End of the date range, as a \code{Date} or a \code{"YYYY-MM-DD"} character string. Default is today.}
 
-\item{aoi}{Area of interest.}
+\item{aoi}{Area of interest: a GeoJSON geometry as a character string, restricting the results to that area. Default \code{""} places no restriction on the area.}
 
-\item{concepts}{One or multiple concept definitions, for example \verb{https://sensingclues.poolparty.biz/SCCSSOntology/631}. See \url{https://sensingclues.poolparty.biz/GraphViews/} for all available concepts.}
+\item{concepts}{One or multiple concept definitions, for example \verb{https://sensingclues.poolparty.biz/SCCSSOntology/631}. See \url{https://sensingclues.poolparty.biz/GraphViews/} for all available concepts. Default \code{NULL} counts all concepts.}
 
-\item{resolution}{The number of rows and columns of the output raster grid, default is 25.}
+\item{resolution}{The number of rows and columns of the output raster grid, default is 25. A higher value gives a finer grid at the cost of a larger download.}
 
 \item{type}{The type of data to build the heatmap from, either \code{"observation"} (default) or \code{"track"}.}
 
 \item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 }
 \value{
-A \code{terra} SpatRaster with \code{resolution} x \code{resolution} grid cells, where each cell holds the number of results collected by the defined group(s) within the given date range and bounds. Returns \code{NULL} when no results are found.
+A \code{terra} SpatRaster with \code{resolution} x \code{resolution} grid cells in
+\code{EPSG:4326}, where each cell holds the number of results collected by the
+defined group(s) within the given date range and bounds. Cells without results
+are \code{NA}. Returns \code{NULL} when no results are found.
 }
 \description{
-Retrieve a heatmap raster
+Counts observations or tracks per grid cell and returns the result as a
+raster, which is a fast way to see where activity is concentrated without
+downloading the individual records. The counting is done by the platform, so
+the size of the download depends on \code{resolution} rather than on the number of
+results.
+}
+\details{
+The extent of the returned raster is the extent of the results, which is not
+necessarily the extent of \code{bounds}.
 }
 \examples{
 \dontrun{
 cookie <- login_cluey("YOUR_USERNAME", "YOUR_PASSWORD")
 r <- get_heatmap(cookie, group = 'focus-project-1234') # demo group
+terra::plot(r)
+
+# a finer grid of the tracks instead of the observations
+r <- get_heatmap(cookie,
+                 group = 'focus-project-1234',
+                 type = "track",
+                 resolution = 100)
 }
 }

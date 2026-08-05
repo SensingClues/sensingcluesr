@@ -19,9 +19,9 @@ get_layer_features(
 
 \item{url}{A Sensing Clues URL, default is \url{https://focus.sensingclues.org/}.}
 
-\item{projectId}{An integer representing a project identifier, obtained by \code{\link[=get_layer_details]{get_layer_details()}}.}
+\item{projectId}{An integer representing a project identifier, obtained by \code{\link[=get_layer_details]{get_layer_details()}}. Found in the \code{pid} column of \code{get_layer_details()}.}
 
-\item{layerId}{An integer representing a layer identifier, obtained by \code{\link[=get_layer_details]{get_layer_details()}}.}
+\item{layerId}{An integer representing a layer identifier, obtained by \code{\link[=get_layer_details]{get_layer_details()}}. Found in the \code{lid} column of \code{get_layer_details()}.}
 }
 \value{
 \code{get_layer_details()} returns a data frame with one row per layer and
@@ -37,10 +37,15 @@ the following columns:
 Returns an empty data frame if no map layers are available.
 
 \code{get_layer_features()} returns a simple feature collection (sf) with
-the geometries and attributes of the requested layer.
+the geometries and attributes of the requested layer. The geometry type
+matches the \code{geometryType} reported by \code{get_layer_details()}.
 }
 \description{
-Access to geodata
+\code{get_layer_details()} lists the map layers you have access to, such as the
+boundaries of a protected area. \code{get_layer_features()} then retrieves one of
+those layers as a simple feature collection that you can plot or intersect
+with your observations. Layers belonging to the internal \code{track} and \code{default}
+projects are left out of the overview.
 }
 \examples{
 \dontrun{
